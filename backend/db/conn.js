@@ -6,7 +6,6 @@ let _db;
 
 module.exports = {
   connectToServer: async function (callback) {
-
     try {
       await client.connect();
     } catch (e) {
@@ -15,7 +14,7 @@ module.exports = {
 
     _db = client.db("Restaurants");
 
-    return (_db === undefined ? false : true);
+    return _db === undefined ? false : true;
   },
   getDb: function () {
     return _db;
