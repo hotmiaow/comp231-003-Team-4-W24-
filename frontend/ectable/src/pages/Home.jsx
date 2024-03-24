@@ -5,6 +5,8 @@ import icon02 from "../assets/images/icon02.png";
 import icon03 from "../assets/images/icon03.png";
 import About from "../components/About/About";
 import RestaurantList from "./Restaurants/RestaurantList";
+import ChefMenuAdd from "../pages/ChefMenuAdd";
+
 
 const Home = () => {
   return (
@@ -16,6 +18,15 @@ const Home = () => {
             <RestaurantList />
           </section>
         */}
+        {/* Add Menu Link */}
+        <div className="text-center mt-10">
+          <Link
+            to="/ChefMenuAdd"
+            className="text-blue-500 hover:underline"
+          >
+            Add Menu
+          </Link>
+        </div>
 
         {/* Grid for other content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 lg:gap-[30px]">

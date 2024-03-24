@@ -21,6 +21,7 @@ app.use(
   })
 );
 
+app.use(require("./routes/menu"));
 app.use(require("./routes/RestaurantRoutes"));
 app.use(require("./routes/DinerRoutes"));
 app.use(require("./routes/UserRoutes"));
