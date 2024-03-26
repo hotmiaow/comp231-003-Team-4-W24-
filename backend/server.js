@@ -3,10 +3,12 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5500;
-// app.use(cors());
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// CORS Configuration
 app.use(
   cors({
     origin: "http://localhost:5173", // This is the location of the React app you're trying to connect from
@@ -21,54 +23,27 @@ app.use(
   })
 );
 
-app.use(require("./routes/RestaurantRoutes"));
-app.use(require("./routes/DinerRoutes"));
-app.use(require("./routes/UserRoutes"));
-app.use(require("./routes/ReservationRoutes"));
-// app.use(require('./routes/Reservation'))
-app.use(require("./Auth/login"));
-// const { login } = require("./Auth/login");
-// app.use("/auth", login);
-// get driver connection
-const dbo = require("./db/conn");
+// Importing Routes
+const restaurantRoutes = require("./routes/RestaurantRoutes");
+const dinerRoutes = require("./routes/DinerRoutes");
+const userRoutes = require("./routes/UserRoutes");
+const reservationRoutes = require("./routes/ReservationRoutes");
+const restaurantOwnerRoutes = require("./routes/RestaurantOwnerRoutes");
 
-// app.get('/restaurants/:id', async (req,res)=>{
-//   const {id} = req.params.id;
+// Using Routes
+app.use("/restaurants", restaurantRoutes);
+app.use("/diner", dinerRoutes);
+app.use("/user", userRoutes);
+app.use("/reservation", reservationRoutes);
+app.use("/restaurant-owner", restaurantOwnerRoutes);
 
-// })
-// const corsOptions = {
-//     origin: '*', // This should match the origin of your frontend app or use '*' for all origins (less secure).
-//     credentials: true,
-//     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-//     optionsSuccessStatus: 200// This is important if your frontend needs to send cookies or use credentials with requests.
-//     // Adjust based on the methods your API supports.
-// };
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://localhost:5173");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//    res.setHeader("Access-Control-Allow-Origin", "*");
-//   next();
-// });
-
-// app.use(cors(corsOptions));
-
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   next();
-// });
-
+// Default Route
 app.use("/", (req, res) => {
-  res.send("home page");
+  res.send("Home page");
 });
 
-app.listen(port, async () => {
-  // perform a database connection when server starts
-  await dbo.connectToServer(function (err) {
-    if (err) console.error(err);
-  });
+// Start the server
+app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
+
