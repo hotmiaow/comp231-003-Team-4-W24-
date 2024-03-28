@@ -52,6 +52,19 @@ GET  http://localhost:5500/User/65eb6079b82acdbc4694972f
 ###
 
 
+### create user
+Post http://localhost:5500/User/register
+
+content-type: application/json
+
+{
+  "email": "ro7@gmail.com",
+  "password": "password",
+  "name": null,
+  "phone": null,
+  "type": "Readonly"
+}
+
 ### Diner Login
 Post http://localhost:5500/diner/login
 content-type: application/json

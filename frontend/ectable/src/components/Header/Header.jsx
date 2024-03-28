@@ -146,7 +146,14 @@ const Header = () => {
                 Booking Management
               </button>
             )}
-
+            {userType === "Readonly" && (
+              <button
+                onClick={() => navigate("/ROManagement")}
+                className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center-justify-center rounded-[50px]"
+              >
+                View Booking
+              </button>
+            )}
             {/* More elements like logout button, etc. */}
           </div>
           <span className="md:hidden">

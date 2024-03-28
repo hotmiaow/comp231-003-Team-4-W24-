@@ -10,6 +10,7 @@ import RestaurantList from "../pages/Restaurants/RestaurantList";
 import ProtectedRoute from "../components/ProtectedRoutes";
 import BookingPage from "../pages/BookingPage";
 import BookingManagement from "../pages/Restaurants/BookingManagement";
+import ROManagement from "../pages/Readonly/ROManagement";
 
 import { Routes, Route } from "react-router-dom";
 const Routers = () => {
@@ -30,6 +31,7 @@ const Routers = () => {
         <Route path="/BookingPage/:restaurantId" element={<BookingPage />} />
         <Route path="/RestaurantList" element={<RestaurantList />} />
         <Route path="/BookingManagement" element={<BookingManagement />} />
+        <Route path="/ROManagement" element={<ROManagement />} />
       </Route>
     </Routes>
   );
