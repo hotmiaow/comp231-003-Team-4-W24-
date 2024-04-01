@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FormControl,
   FormControlLabel,
@@ -15,19 +13,17 @@ import {
   DialogContent,
 } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-
 import { create } from "./api-Reservation";
-
 import emailConfirm from "./api-EmailConfirmation";
-
 import { read } from "./Restaurants/api-restaurant";
+import { fetchMenuForRestaurant } from "./Chef/api-MenuMnagement";
 import Cookies from "js-cookie";
 
 const BookingPage = () => {
   const { restaurantId } = useParams();
+  const [menuItems, setMenuItems] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [FullDialog, setFullDialog] = useState(false);
-
   const [bookingDetails, setBookingDetails] = useState({
     date: "",
     time: "",
@@ -35,35 +31,36 @@ const BookingPage = () => {
     menuSelection: [],
   });
 
-  // const [emailInfor, setEmailInfor] = useState({
-  //   date : "",
-  //   time : "", 
-  //   people : "",
-  //   restaurant : "",
-  //   userEmail : ""
-  // })
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const credentials = {
+          t: Cookies.get("accessToken"),
+        };
+        const menuData = await fetchMenuForRestaurant(
+          { restaurantId: restaurantId },
+          credentials
+        );
+        setMenuItems(menuData);
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+      }
+    };
 
-
+    fetchMenu();
+  }, [restaurantId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingDetails({ ...bookingDetails, [name]: value });
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const controller = new AbortController();
-    const signal = controller.signal;
     const credentials = {
-      t: Cookies.get("accessToken"), // Example: Retrieving an auth token from cookies
+      t: Cookies.get("accessToken"),
     };
-    console.log(credentials.t);
-    console.log(restaurantId);
-    const restaurantData = await read({_id : restaurantId}, credentials, signal);
-    console.log(restaurantData.name);
-    console.log(Cookies.get("userEmail"))
-
-
+    const restaurantData = await read({ _id: restaurantId }, credentials);
     const Reservation = {
       restaurantId: restaurantId,
       restaurantName: restaurantData.name,
@@ -73,83 +70,64 @@ const handleSubmit = async (e) => {
       menuSelection: bookingDetails.menuSelection || undefined,
       dinerId: Cookies.get("userId") || undefined,
       dinerName: Cookies.get("dinerName"),
-      dinerEmail : Cookies.get("userEmail")
+      dinerEmail: Cookies.get("userEmail"),
+    };
+    const Email = {
+      date: bookingDetails.date || undefined,
+      time: bookingDetails.time || undefined,
+      people: bookingDetails.people || undefined,
+      restaurant: restaurantData.name || undefined,
+      userEmail: Cookies.get("userEmail"),
     };
 
-    const Email = {
-        date: bookingDetails.date || undefined,
-        time: bookingDetails.time || undefined,
-        people: bookingDetails.people || undefined,
-        restaurant : restaurantData.name || undefined,
-        userEmail : Cookies.get("userEmail")
-    }
-
-    console.log(Reservation)
-
     create(Reservation).then((data) => {
-      console.log(data.success);
-      console.log(data);
-      console.log(data.data.remain);
-      console.log(data.data.total);
-      
       if (data.data.success) {
         setOpenDialog(true);
-        setFullDialog(false)
+        setFullDialog(false);
         emailSend(Email);
       } else {
-        setBookingDetails({ ...bookingDetails, error: data.error, remain : data.data.remain });
+        setBookingDetails({
+          ...bookingDetails,
+          error: data.error,
+          remain: data.data.remain,
+        });
         setOpenDialog(false);
         setFullDialog(true);
       }
-    }); // Add logic here to send booking details to your backend
+    });
   };
 
-  
-
-  const emailSend = async (Email) =>{
-    emailConfirm(Email).then((data)=>{
-      console.log(Email);
-      console.log(data);
-    }).catch((err) =>{
-      console.log(err);
-    })
-  }
+  const emailSend = async (Email) => {
+    emailConfirm(Email)
+      .then((data) => {
+        console.log(Email);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleClose = () => {
     setOpenDialog(false);
-    // Additional logic to redirect the user or reset the form
   };
 
-  const handleFullClose = () =>{
+  const handleFullClose = () => {
     setFullDialog(false);
-  }
-
-  const menuItems = [
-    { name: "Steak", price: 20 },
-    { name: "Salmon", price: 18 },
-    // Add more menu items
-  ];
-
-  // Inside the BookingPage component, add a state to manage selected menu items
-  const [selectedMenu, setSelectedMenu] = useState([]);
+  };
 
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
-    setSelectedMenu((prevSelectedMenu) => {
-      // Determine the new selection based on whether the checkbox was checked or unchecked
-      const newMenuSelection = checked
-        ? [...prevSelectedMenu, name]
-        : prevSelectedMenu.filter((item) => item !== name);
+    const selectedItemId = menuItems.find((item) => item.name === name)?._id;
 
-      // Now correctly update the bookingDetails with the new menu selection
-      setBookingDetails((prevBookingDetails) => ({
-        ...prevBookingDetails,
-        menuSelection: newMenuSelection,
-      }));
-
-      // Return the new menu selection to update the selectedMenu state
-      return newMenuSelection;
-    });
+    setBookingDetails((prevBookingDetails) => ({
+      ...prevBookingDetails,
+      menuSelection: checked
+        ? [...prevBookingDetails.menuSelection, selectedItemId]
+        : prevBookingDetails.menuSelection.filter(
+            (id) => id !== selectedItemId
+          ),
+    }));
   };
 
   return (
@@ -201,16 +179,32 @@ const handleSubmit = async (e) => {
           onChange={handleInputChange}
           required
         />
-        {/* Menu selection will be added here */}
         <Button type="submit" color="primary" variant="contained">
           Book Now
         </Button>
       </form>
+      <FormControl component="fieldset">
+        <Typography variant="h6">Select Menu Items</Typography>
+        {menuItems.map((item) => (
+          <FormControlLabel
+            key={item._id}
+            control={
+              <Checkbox
+                onChange={handleMenuChange}
+                name={item.name}
+                checked={bookingDetails.menuSelection.includes(item._id)}
+              />
+            }
+            label={`${item.name} - $${item.price}`}
+          />
+        ))}
+      </FormControl>
       <Dialog open={openDialog} onClose={handleClose}>
         <DialogTitle>Booking Successful</DialogTitle>
         <DialogContent>
-            You have reserved a table on {bookingDetails.date} at {bookingDetails.time} successfully. 
-          </DialogContent>
+          You have reserved a table on {bookingDetails.date} at{" "}
+          {bookingDetails.time} successfully.
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             OK
@@ -222,33 +216,20 @@ const handleSubmit = async (e) => {
         <DialogTitle>Booking Failed</DialogTitle>
         <DialogContent>
           Insufficient availability for your selected date and time in below.
-          </DialogContent>
-          {/* <DialogContent>
-            {bookingDetails.date} at {bookingDetails.time}
-          </DialogContent> */}
-          <DialogContent>
-          Currently, only {bookingDetails.remain} are available for booking on {bookingDetails.date} at {bookingDetails.time}.
-          </DialogContent>
-          <DialogContent>
-            Please select an alternative date or time slot for your reservation.
-          </DialogContent>
+        </DialogContent>
+        <DialogContent>
+          Currently, only {bookingDetails.remain} are available for booking on{" "}
+          {bookingDetails.date} at {bookingDetails.time}.
+        </DialogContent>
+        <DialogContent>
+          Please select an alternative date or time slot for your reservation.
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleFullClose} color="primary">
             OK
           </Button>
         </DialogActions>
       </Dialog>
-
-      <FormControl component="fieldset">
-        <Typography variant="h6">Select Menu Items</Typography>
-        {menuItems.map((item) => (
-          <FormControlLabel
-            control={<Checkbox onChange={handleMenuChange} name={item.name} />}
-            label={`${item.name} - $${item.price}`}
-            key={item.name}
-          />
-        ))}
-      </FormControl>
     </div>
   );
 };

@@ -18,7 +18,7 @@ const {
 } = require("../Controller/restaurantController");
 
 // This section will help you get a list of all the records.
-// get all restaurants
+// get all Menu
 MenuRoutes.route("/Menu").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
@@ -30,11 +30,11 @@ MenuRoutes.route("/Menu").get(async function (req, response) {
   }
 });
 
-//register new restaurant
+//register new Menu
 MenuRoutes.route("/Menu/register").post(async (req, res) => {
   const db_connect = dbo.getDb();
   console.log(req.body.restaurantId);
-  const Reservation = {
+  const Menu = {
     restaurantId: req.body.restaurantId,
     restaurantName: req.body.restaurantName,
     date: req.body.date,
@@ -244,86 +244,34 @@ MenuRoutes.route("/Menu/:id/delete").delete(async (req, res) => {
     });
 });
 
-// This section will help you find the booking
+// This section will help you find the Menu for a Restaurant
 
-MenuRoutes.route("/Menu/find").get(authToken, async (req, res) => {
+MenuRoutes.route("/Menu/Restaurant/:restaurantId").get(async (req, res) => {
   const db_connect = dbo.getDb();
-  const userId = req.body.userId;
-  const id = req.body.id;
-
-  if (!userId || !id) {
-    return res.status(400).json({ message: "Missing userId or restaurantId" });
+  const restaurantId = req.params.restaurantId;
+  console.log(restaurantId);
+  if (!restaurantId) {
+    return res.status(400).json({ message: "Missing restaurantId" });
   }
 
   try {
-    const reservation = await db_connect.collection("Reservation").findOne({
-      userId: userId,
-      id: id,
-    });
-
-    if (reservation) {
-      // Returning the relevant reservation details
-      const { date, time, people, menuSelection } = reservation;
-      res.json({ date, time, people, menuSelection });
-    } else {
-      res.status(404).json({ message: "Reservation not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching reservation details:", error);
-    res.status(500).json({
-      message: "An error occurred while fetching reservation details.",
-    });
-  }
-});
-
-MenuRoutes.route("/Menu/User/:chefId").get(async (req, res) => {
-  const db_connect = dbo.getDb("Menu");
-  const readonlyId = req.params.chefId;
-
-  // Validate readonlyId as a valid ObjectId
-  if (!ObjectId.isValid(chefId)) {
-    return res.status(400).json({ message: "Invalid readonlyId." });
-  }
-
-  try {
-    // Step 1: Find all restaurant documents based on adminId
-    const restaurants = await db_connect
+    const menuItems = await db_connect
       .collection("Menu")
-      .find({ chefId: chefId })
+      .find({ restaurantId })
       .toArray();
 
-    console.log(restaurants);
-
-    if (restaurants.length === 0) {
-      console.log("No restaurants found for this adminId");
-      return res
-        .status(404)
-        .json({ message: "No restaurants found for this adminId." });
-    }
-
-    const restaurantIds = restaurants.map((restaurant) =>
-      restaurant._id.toString()
-    );
-    console.log("Restaurant IDS");
-    console.log(restaurantIds);
-    // Step 2: Find reservations associated with each restaurant's _id
-    const reservations = await db_connect
-      .collection("Reservation")
-      .find({ restaurantId: { $in: restaurantIds } })
-      .toArray();
-
-    if (reservations.length > 0) {
-      console.log("Reservations found:", reservations);
-      res.json(reservations); // Respond with an array of reservations
+    if (menuItems) {
+      // Returning the relevant reservation details
+      res.json(menuItems);
     } else {
-      console.log("No reservations found for these restaurants");
-      res
-        .status(404)
-        .json({ message: "No reservations found for these restaurants." });
+      res.status(404).json({ message: "Menu not found" });
     }
   } catch (error) {
-    console.error("Error accessing the database:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching Menu details:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching Menu details.",
+    });
   }
 });
+
 module.exports = MenuRoutes;

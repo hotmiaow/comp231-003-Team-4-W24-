@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5500;
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 // app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +28,8 @@ app.use(require("./routes/RestaurantRoutes"));
 app.use(require("./routes/UserRoutes"));
 app.use(require("./routes/ReservationRoutes"));
 app.use(require("./routes/EmailConfirmation"));
+app.use(require("./routes/MenuRoutes"));
+
 // app.use(require('./routes/Reservation'))
 app.use(require("./Auth/login"));
 

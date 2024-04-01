@@ -129,3 +129,11 @@ get http://localhost:5500/Reservation
 
 ### find reservatrion by user ID
 get http://localhost:5500/Reservation/65eb6079b82acdbc4694972f
+
+
+### find Menu by Restaurant ID
+get http://localhost:5500/Menu/Restaurant/65cbdcf6e140698bfe3702a0
+
+
+### find Menu by Restaurant ID 2
+get http://localhost:5500/Menu/Restaurant/65e290743fb93770c0e2cfe9

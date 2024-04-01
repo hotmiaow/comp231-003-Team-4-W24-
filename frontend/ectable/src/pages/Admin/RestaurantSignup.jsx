@@ -158,6 +158,8 @@ export default function RestaurantSignup() {
       readonlyPassword: values.readonlyPassword || undefined,
       selectedImage: values.selectedImage || undefined,
       availability: values.availability || undefined,
+      chefEmail: values.chefEmail || undefined,
+      chefPassword: values.chefPassword || undefined,
     };
 
     if (values.registerReadOnly) {
@@ -174,7 +176,7 @@ export default function RestaurantSignup() {
           setValues({ ...values, error: readOnlyData.error });
         } else {
           const readOnlyId = readOnlyData.insertedId;
-          const updatedRestaurant = { ...restaurant, readOnlyId: readOnlyId };
+          var updatedRestaurant = { ...restaurant, readOnlyId: readOnlyId };
 
           if (values.registerChef) {
             // If registering chef, create the chef user next
@@ -196,7 +198,7 @@ export default function RestaurantSignup() {
               console.error("Error creating chef user:", error);
             }
           }
-
+          console.log("updated " + updatedRestaurant);
           // Proceed to create the restaurant with the updated information
           await createRestaurant(updatedRestaurant);
         }
@@ -264,10 +266,10 @@ export default function RestaurantSignup() {
     <div>
       <Card className={classes.card}>
         <CardContent>
+          Menu
           <Typography variant="h6" className={classes.title}>
             Sign Up Restaurant
           </Typography>
-
           <TextField
             id="email"
             label="Owner name"
@@ -276,7 +278,6 @@ export default function RestaurantSignup() {
             onChange={handleChange("email")}
             margin="normal"
           />
-
           <TextField
             id="name"
             label="Restaurant name"
@@ -396,7 +397,6 @@ export default function RestaurantSignup() {
             }
             label="Register Chef Account"
           />
-
           {/* Conditionally render the read-only email and password fields based on the checkbox */}
           {values.registerReadOnly && (
             <>
