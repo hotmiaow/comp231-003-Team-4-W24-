@@ -22,8 +22,6 @@ const {
 } = require("../Controller/restaurantController");
 const { route } = require("./ReservationRoutes");
 
-
-
 // This section will help you get a list of all the records.
 // get all restaurants
 
@@ -57,6 +55,8 @@ restaurantRoutes.route("/Restaurants/register").post(async (req, res) => {
     adminId: req.body.adminId,
     readonlyId: req.body.readonlyId,
     availability: req.body.availability,
+    chefId: req.body.chefId,
+    chefEmail: req.body.chefEmail,
   };
 
   const check = await db_connect

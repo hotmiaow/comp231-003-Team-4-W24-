@@ -90,6 +90,7 @@ export default function RestaurantSignup() {
     readonlyPassword: "",
     availability: "",
     registerReadOnly: false, // New state value for checkbox
+    registerChef: false, // New state value for registering chef
   });
 
   const handleCheckboxChange = (event) => {
@@ -167,31 +168,70 @@ export default function RestaurantSignup() {
       };
 
       try {
-        // Use await to wait for the createUser call to resolve
-        const data = await createUser(readOnlyUser);
+        const readOnlyData = await createUser(readOnlyUser);
 
-        if (data.error) {
-          // Handle error if createUser failed
-          setValues({ ...values, error: data.error });
+        if (readOnlyData.error) {
+          setValues({ ...values, error: readOnlyData.error });
         } else {
-          // Extract the insertedId from the createUser response
-          const readonlyId = data.insertedId;
+          const readOnlyId = readOnlyData.insertedId;
+          const updatedRestaurant = { ...restaurant, readOnlyId: readOnlyId };
 
-          // Include the readonlyID in the restaurant information
-          const updatedRestaurant = { ...restaurant, readonlyId: readonlyId };
+          if (values.registerChef) {
+            // If registering chef, create the chef user next
+            const chefUser = {
+              email: values.chefEmail || undefined,
+              password: values.chefPassword || undefined,
+              type: "chef",
+            };
+
+            try {
+              const chefData = await createUser(chefUser);
+              if (chefData.error) {
+                setValues({ ...values, error: chefData.error });
+              } else {
+                const chefId = chefData.insertedId;
+                updatedRestaurant = { ...updatedRestaurant, chefId: chefId };
+              }
+            } catch (error) {
+              console.error("Error creating chef user:", error);
+            }
+          }
 
           // Proceed to create the restaurant with the updated information
           await createRestaurant(updatedRestaurant);
-          // Handle successful creation (e.g., show a success message, navigate to another page)
         }
       } catch (error) {
-        // Handle any errors that occurred during the createUser call
         console.error("Error creating read-only user:", error);
-        // Optionally update state to reflect the error
       }
     } else {
-      // If not registering a read-only account, just create the restaurant
-      await createRestaurant(restaurant);
+      // If not registering a read-only account, proceed with chef registration if needed
+      if (values.registerChef) {
+        // If registering chef, create the chef user first
+        const chefUser = {
+          email: values.chefEmail || undefined,
+          password: values.chefPassword || undefined,
+          type: "chef",
+        };
+
+        try {
+          const chefData = await createUser(chefUser);
+          if (chefData.error) {
+            setValues({ ...values, error: chefData.error });
+          } else {
+            const chefId = chefData.insertedId;
+            const updatedRestaurant = {
+              ...restaurant,
+              chefId: chefId,
+              chefEmail: values.chefEmail,
+            };
+            await createRestaurant(updatedRestaurant);
+          }
+        } catch (error) {
+          console.error("Error creating chef user:", error);
+        }
+      } else {
+        await createRestaurant(restaurant);
+      }
     }
   };
 
@@ -345,6 +385,17 @@ export default function RestaurantSignup() {
             }
             label="Register Read Only Account"
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={values.registerChef}
+                onChange={handleCheckboxChange}
+                name="registerChef"
+                color="primary"
+              />
+            }
+            label="Register Chef Account"
+          />
 
           {/* Conditionally render the read-only email and password fields based on the checkbox */}
           {values.registerReadOnly && (
@@ -364,6 +415,27 @@ export default function RestaurantSignup() {
                 className={classes.textField}
                 value={values.readonlyPassword}
                 onChange={handleChange("readonlyPassword")}
+                margin="normal"
+              />
+            </>
+          )}
+          {values.registerChef && (
+            <>
+              <TextField
+                id="chefEmail"
+                label="Chef Account Email"
+                className={classes.textField}
+                value={values.chefEmail}
+                onChange={handleChange("chefEmail")}
+                margin="normal"
+              />
+              <TextField
+                id="chefPassword"
+                label="Chef Account Password"
+                type="password"
+                className={classes.textField}
+                value={values.chefPassword}
+                onChange={handleChange("chefPassword")}
                 margin="normal"
               />
             </>

@@ -5,53 +5,35 @@ http://localhost:5500/Diner/
 
 ## Restaurant owner to register restaurant
 
-## Diner make booking
+# Dinner account :
 
-````
-| mern_skeleton/
-    | -- client/
-         | --- assets/
-            | ---- images/
-         | --- auth/
-            | ---- api-auth.js
-            | ---- auth-helper.js
-            | ---- PrivateRoute.js
-            | ---- Signin.js
-         | --- core/
-            | ---- Home.js
-            | ---- Menu.js
-         | --- user/
-            | ---- api-user.js
-            | ---- DeleteUser.js
-            | ---- EditProfile.js
-            | ---- Profile.js
-            | ---- Signup.js
-            | ---- Users.js
-         | --- App.js
-         | --- main.js
-         | --- MainRouter.js
-         | --- theme.js
-     | -- server/
-         | --- devBundle.js
-     | -- webpack.config.client.js
-     | -- webpack.config.client.production.js
-    ```
-````
+test@gmail.com
+
+action :
+login / logout / view / book / update / delete
+
+## admin account :
+
+admin1@gmail.com
+action :
+login / logout / view /update / delete
+
+## Read only account :
+
+KEG :
+ro1@gmail.com
+
+Tim horton:
+ro2@gmail.com
+
+starbucks:
+ro3@gmail.com
+
+BBQ House:
+ro4@gmail.com
+
+action :
+login / logout / view
 
 email: ectablerev@gmail.com
 password: Comp231_group4
-
-## test resurant
-
-{
-"name": "starbucks2",
-"location": "Scarborough2",
-"photo": "restImg3.jpg",
-"rating": "4",
-"cuisine": "Coffee shop",
-"price": "$",
-"description": "offering fresh-roasted coffee beans, tea and spices from around the wo…",
-"closing": 20,
-"opening": 12,
-"phone": 2424242424
-}
