@@ -25,6 +25,14 @@ const Admin = () => {
       >
         2. Go to Restaurant Signup
       </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => (window.location.href = "/MyRestaurants")}
+        style={{ maxWidth: "500px", alignSelf: "center" }}
+      >
+        3. My Restaurants
+      </Button>
     </Box>
   );
 };

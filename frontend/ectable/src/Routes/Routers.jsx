@@ -11,6 +11,8 @@ import ProtectedRoute from "../components/ProtectedRoutes";
 import BookingPage from "../pages/BookingPage";
 import BookingManagement from "../pages/Restaurants/BookingManagement";
 import ROManagement from "../pages/Readonly/ROManagement";
+import MyRestaurants from '../pages/Admin/MyRestaurants';
+import EditMenu from '../pages/Admin/RestaurantEditMenu';
 
 import { Routes, Route } from "react-router-dom";
 const Routers = () => {
@@ -32,6 +34,8 @@ const Routers = () => {
         <Route path="/RestaurantList" element={<RestaurantList />} />
         <Route path="/BookingManagement" element={<BookingManagement />} />
         <Route path="/ROManagement" element={<ROManagement />} />
+        <Route path="/MyRestaurants" element={<MyRestaurants />} />
+        <Route path="/Edit-Menu/:restaurantId" element={<EditMenu />} /> 
       </Route>
     </Routes>
   );

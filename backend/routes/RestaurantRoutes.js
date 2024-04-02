@@ -189,4 +189,64 @@ restaurantRoutes.post("/restaurants/register", registerRestaurant);
 restaurantRoutes.post("/restaurants/:id/update", restaurantUpdateById);
 restaurantRoutes.delete("/restaurants/:id/delete", restaurantDeleteById);
 
+// My Restaurants
+restaurantRoutes.route('/MyRestaurants').get(async function (req, response) {
+  const jwt = require('jsonwebtoken');
+  let db_connect = dbo.getDb();
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  adminEmail = decoded.email;
+  //console.log('adminemail:', adminEmail)
+  try {
+    var records = await db_connect.collection("Restaurants").find({ adminEmail: adminEmail }).toArray();
+    response.json(records);
+  } catch (e) {
+    console.log("An error occurred pulling the records. " + e);
+  }
+});
+
+/*
+  Menu Items
+*/
+// Post menu items for a particular restaurant
+restaurantRoutes.post('/menuitems/:restaurantId', async (req, res) => {
+  const { restaurantId } = req.params;
+  const { menuItems } = req.body;
+
+  let db_connect = dbo.getDb();
+  
+  // console.log('calling deleteMany');
+  const deleteResult = await db_connect
+    .collection("MenuItem")
+    .deleteMany({ restaurantId: {$in: [restaurantId] }});
+  // console.log(`Deleted ${deleteResult.deletedCount} items`);
+    
+  //console.log('Calling insert:');
+  if (Array.isArray(menuItems) && menuItems.length) {
+    const insertedItems = db_connect
+      .collection("MenuItem")
+      .insertMany(menuItems.map((item) => ({ ...item, restaurantId })))
+    // console.log('Ending insert');
+    res.status(200).json(insertedItems);
+  } else {
+    // console.log('Failed to insert');
+    res.status(400).json(insertedItems);
+  }
+});
+
+// Get menu items for a particular restaurant
+restaurantRoutes.get('/menuitems/:restaurantId', async (req, res) => {
+  const { restaurantId } = req.params;
+  try {
+    let db_connect = dbo.getDb();
+    const menuItems = await db_connect
+      .collection("MenuItem")
+      .find({ restaurantId: restaurantId }).toArray();
+      res.status(200).json(menuItems);
+  } catch (error) {
+    console.error('Error fetching menu items:', error); 
+    res.status(500).json({ message: 'Error fetching menu items', error });
+  }
+});
+
 module.exports = restaurantRoutes;
