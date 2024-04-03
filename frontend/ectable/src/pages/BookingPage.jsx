@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FormControl,
   FormControlLabel,
@@ -19,6 +19,8 @@ import { useParams } from "react-router-dom";
 import { create } from "./api-Reservation";
 
 import emailConfirm from "./api-EmailConfirmation";
+
+import { fetchMenuItem } from "./Admin/api-Restaurant";
 
 import { read } from "./Restaurants/api-restaurant";
 import Cookies from "js-cookie";
@@ -104,8 +106,6 @@ const handleSubmit = async (e) => {
     }); // Add logic here to send booking details to your backend
   };
 
-  
-
   const emailSend = async (Email) =>{
     emailConfirm(Email).then((data)=>{
       console.log(Email);
@@ -124,32 +124,56 @@ const handleSubmit = async (e) => {
     setFullDialog(false);
   }
 
+  /*
   const menuItems = [
     { name: "Steak", price: 20 },
     { name: "Salmon", price: 18 },
     // Add more menu items
   ];
-
+  */
+  // fetch the menu items when the component loads
+  const [menuItems, setMenuItems] = useState([])
+  useEffect(() => {
+    const credentials = {
+      t: Cookies.get("accessToken"), // Example: Retrieving an auth token from cookies
+    };
+    const fetchMenu = async () => {
+      const data = await fetchMenuItem(restaurantId, credentials);
+      if (data) {
+        setMenuItems(data);
+        //console.log(data);
+      }
+    };
+    fetchMenu();
+  }, [restaurantId]);
+  // handle menu selection
+  const handleMenuSelectionChange = (itemId) => {
+    const newSelection = bookingDetails.menuSelection.includes(itemId)
+      ? bookingDetails.menuSelection.filter(id => id !== itemId)
+      : [...bookingDetails.menuSelection, itemId];
+    setBookingDetails({ ...bookingDetails, menuSelection: newSelection });
+  };
+  
   // Inside the BookingPage component, add a state to manage selected menu items
   const [selectedMenu, setSelectedMenu] = useState([]);
 
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
     setSelectedMenu((prevSelectedMenu) => {
-      // Determine the new selection based on whether the checkbox was checked or unchecked
-      const newMenuSelection = checked
-        ? [...prevSelectedMenu, name]
-        : prevSelectedMenu.filter((item) => item !== name);
+        // Determine the new selection based on whether the checkbox was checked or unchecked
+        const newMenuSelection = checked
+          ? [...prevSelectedMenu, name]
+          : prevSelectedMenu.filter((item) => item !== name);
 
-      // Now correctly update the bookingDetails with the new menu selection
-      setBookingDetails((prevBookingDetails) => ({
-        ...prevBookingDetails,
-        menuSelection: newMenuSelection,
-      }));
+        // Now correctly update the bookingDetails with the new menu selection
+        setBookingDetails((prevBookingDetails) => ({
+          ...prevBookingDetails,
+          menuSelection: newMenuSelection,
+        }));
 
-      // Return the new menu selection to update the selectedMenu state
-      return newMenuSelection;
-    });
+        // Return the new menu selection to update the selectedMenu state
+        return newMenuSelection;
+      });
   };
 
   return (
@@ -202,6 +226,18 @@ const handleSubmit = async (e) => {
           required
         />
         {/* Menu selection will be added here */}
+        <div style={{ marginTop: '20px', marginLeft: '50px', marginBottom: '20px'}}>
+          <FormControl component="fieldset">
+            <Typography variant="h6">Select Menu Items</Typography>
+            {menuItems.map((item) => (
+              <FormControlLabel
+                control={<Checkbox onChange={handleMenuChange} name={item.name} />}
+                label={`${item.name} - $${item.price}`}
+              key={item.name}
+            />
+            ))}
+          </FormControl>
+        </div>
         <Button type="submit" color="primary" variant="contained">
           Book Now
         </Button>
@@ -238,17 +274,6 @@ const handleSubmit = async (e) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <FormControl component="fieldset">
-        <Typography variant="h6">Select Menu Items</Typography>
-        {menuItems.map((item) => (
-          <FormControlLabel
-            control={<Checkbox onChange={handleMenuChange} name={item.name} />}
-            label={`${item.name} - $${item.price}`}
-            key={item.name}
-          />
-        ))}
-      </FormControl>
     </div>
   );
 };
