@@ -12,6 +12,9 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
@@ -61,12 +64,45 @@ const BookingPage = () => {
   };
 
   const menuItems = [
-    { name: "Steak", price: 20 },
-    { name: "Salmon", price: 18 },
+    { 
+      name: "Steak", 
+      price: 20, 
+      image: "../../images/steak.jpg", 
+      description: "Juicy beef steak cooked to perfection, served with a side of vegetables and mashed potatoes." 
+    },
+    { 
+      name: "Salmon", 
+      price: 18, 
+      image: "../../images/salmon.jpg", 
+      description: "Fresh Atlantic salmon fillet grilled and seasoned with herbs, served with steamed rice and lemon wedges." 
+    },
+    { 
+      name: "Burger", 
+      price: 15, 
+      image: "../../images/burger.jpg", 
+      description: "Classic beef burger with lettuce, tomato, onion, pickles, and your choice of cheese, served with fries." 
+    },
+    { 
+      name: "Pizza", 
+      price: 23, 
+      image: "../../images/pizza.jpg", 
+      description: "Hand-tossed pizza with your choice of toppings, baked to perfection in a wood-fired oven." 
+    },
+    { 
+      name: "Pancake", 
+      price: 12, 
+      image: "../../images/pancake.jpg", 
+      description: "Fluffy pancakes served with maple syrup, whipped cream, and a side of fresh fruits." 
+    },
+    { 
+      name: "Croissant", 
+      price: 10, 
+      image: "../../images/croissant.jpg", 
+      description: "Buttery and flaky croissant, perfect for breakfast or as a light snack." 
+    },
     // Add more menu items
   ];
 
-  // Inside the BookingPage component, add a state to manage selected menu items
   const [selectedMenu, setSelectedMenu] = useState([]);
 
   const handleMenuChange = (event) => {
@@ -128,7 +164,6 @@ const BookingPage = () => {
           onChange={handleInputChange}
           required
         />
-        {/* Menu selection will be added here */}
         <Button type="submit" color="primary" variant="contained">
           Book Now
         </Button>
@@ -145,11 +180,20 @@ const BookingPage = () => {
       <FormControl component="fieldset">
         <Typography variant="h6">Select Menu Items</Typography>
         {menuItems.map((item) => (
-          <FormControlLabel
-            control={<Checkbox onChange={handleMenuChange} name={item.name} />}
-            label={`${item.name} - $${item.price}`}
-            key={item.name}
-          />
+          <Card key={item.name} style={{ display: 'flex', marginBottom: '10px' }}>
+            <div style={{ flex: 1 }}>
+              <FormControlLabel
+                control={<Checkbox onChange={handleMenuChange} name={item.name} />}
+                label={`${item.name} - $${item.price}`}
+              />
+              <Typography>{item.description}</Typography>
+            </div>
+            <CardMedia
+              style={{ width: '100px' }}
+              image={item.image}
+              title={item.name}
+            />
+          </Card>
         ))}
       </FormControl>
     </div>
