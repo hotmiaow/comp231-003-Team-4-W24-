@@ -19,6 +19,7 @@ const {
   registerRestaurant,
   restaurantUpdateById,
   restaurantDeleteById,
+  getRestaurantIdByChefId
 } = require("../Controller/restaurantController");
 const { route } = require("./ReservationRoutes");
 
@@ -188,5 +189,6 @@ restaurantRoutes.get("/restaurants/:id", getRestaurantById);
 restaurantRoutes.post("/restaurants/register", registerRestaurant);
 restaurantRoutes.post("/restaurants/:id/update", restaurantUpdateById);
 restaurantRoutes.delete("/restaurants/:id/delete", restaurantDeleteById);
+restaurantRoutes.post("/restaurants/chef", getRestaurantIdByChefId);
 
 module.exports = restaurantRoutes;

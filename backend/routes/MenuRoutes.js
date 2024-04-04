@@ -16,6 +16,7 @@ const authToken = require("../Auth/token");
 const {
   updateRestaurantAvailability,
 } = require("../Controller/restaurantController");
+const { TopologyDescription } = require("mongodb");
 
 // This section will help you get a list of all the records.
 // get all Menu
@@ -32,107 +33,28 @@ MenuRoutes.route("/Menu").get(async function (req, response) {
 
 //register new Menu
 MenuRoutes.route("/Menu/register").post(async (req, res) => {
-  const db_connect = dbo.getDb();
-  console.log(req.body.restaurantId);
-  const Menu = {
-    restaurantId: req.body.restaurantId,
-    restaurantName: req.body.restaurantName,
-    date: req.body.date,
-    time: req.body.time,
-    people: req.body.people,
-    menuSelection: req.body.menuSelection,
-    dinerId: req.body.dinerId,
-  };
+    const db_connect = dbo.getDb("Menu");
+    console.log(req.body.restaurantId);
+    
+    const menu = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      restaurantId: req.body.restaurantId
+    };
+    console.log(menu)
 
-  const peopleRequesting = parseInt(req.body.people);
-
-  // const check = await db_connect
-  //   .collection("Reservation")
-  //   .findOne({ restaurantId: Reservation.restaurantId, dinerId : Reservation.dinerId, date: Reservation.date, time: Reservation.time });
-
-  //   .insertOne(Reservation);
-  try {
-    const query = { _id: new ObjectId(req.body.restaurantId) };
-    const check = await db_connect
-      .collection("Menu")
-      .findOne(query, { projection: { availability: 1, _id: 0 } });
-    // const bookingquery = { restaurantId : new ObjectId(req.body.restaurantId), date : req.body.date, time: req.body.time }
-    // const booking = await db_connect.collection("Reservation").find(bookingquery);
-    // console.log(booking);
-
-    const totalAvailability = check.availability;
-
-    console.log(req.body.date);
-    console.log(req.body.time);
-    console.log(req.body.people);
-    let totalBooked = 0;
-
-    console.log({
-      restaurantId: req.body.restaurantId,
-      date: req.body.date,
-      time: req.body.time,
-    });
-
-    const bookingAggregation = await db_connect
-      .collection("Menu")
-      .aggregate([
-        {
-          $match: {
-            restaurantId: req.body.restaurantId, // Ensure this matches your schema's data type
-            date: req.body.date,
-            time: req.body.time,
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            totalBooked: { $sum: { $toInt: "$people" } },
-          },
-        },
-      ])
-      .toArray();
-
-    console.log(bookingAggregation);
-
-    if (bookingAggregation.length > 0) {
-      totalBooked = bookingAggregation[0].totalBooked;
+    try {
+      var records = await db_connect.collection("Menu").insertOne(menu).then((result) => {
+        res.json(result);
+        console.log(result);
+      })
+      .catch((err) => console.log(err));
+    } catch (e) {
+      console.log("An error occurred pulling the records. " + e);
     }
 
-    console.log(`totalAvailability : ${totalAvailability}`);
-    console.log(`totalBooked : ${totalBooked}`);
-
-    console.log(`peopleRequesting : ${peopleRequesting}`);
-    const remainingAvailability = totalAvailability - totalBooked;
-    console.log(`remainingAvailability : ${remainingAvailability}`);
-
-    if (remainingAvailability >= peopleRequesting) {
-      const response = await db_connect
-        .collection("Reservation")
-        .insertOne(Reservation);
-      console.log(response);
-      res.json({
-        success: true,
-        message: "Reservation successful.",
-        remain: remainingAvailability,
-        total: totalBooked,
-      });
-    } else {
-      console.log("Insufficient availability for the requested booking");
-      res.json({
-        success: false,
-        message: "An error occurred during booking",
-        remain: remainingAvailability,
-        total: totalBooked,
-      });
-    }
-  } catch (err) {
-    console.error("Error processing reservation:", err);
-    res.status(400).json({
-      success: false,
-      message: "Insufficient availability for the requested booking",
-      remain: remainingAvailability,
-      total: totalBooked,
-    });
+  
   }
 
   //     if(check){
@@ -162,15 +84,15 @@ MenuRoutes.route("/Menu/register").post(async (req, res) => {
   //     })
   //     .catch((err) => console.error(err));
   // }
-});
+);
 
 // This section will help you get a single record by id
 MenuRoutes.route("/Menu/:id").get(authToken, async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
-  const data = await db_connect.collection("Menu").findOne(myquery);
+  const data = await db_connect.collection("Menu").find(myquery).toArray();
 
-  if (data) {
+  if (data && data.length > 0) {
     console.log(data);
     console.log(myquery._id);
     res.json(data);
@@ -195,11 +117,14 @@ MenuRoutes.route("/Menu/:id").get(authToken, async (req, res) => {
 
 // This section will help you update a record by id.
 MenuRoutes.route("/Menu/:id/update").put(async (req, res) => {
-  let db_connect = dbo.getDb();
-  let myquery = { _id: new ObjectId(req.params.id) };
+  let db_connect = dbo.getDb("Menu");
+  console.log("req body")
+  console.log(req.body);
+  let myquery = { _id: new ObjectId(req.body.id) };
+  console.log(myquery)
 
   let update = {};
-  let query = ["date", "time", "people"];
+  let query = ["name", "description", "price"];
 
   for (let check of query) {
     if (req.body[check] != null && req.body[check] != undefined) {
@@ -232,12 +157,25 @@ MenuRoutes.route("/Menu/:id/update").put(async (req, res) => {
 });
 
 // This section will help you delete a record
-MenuRoutes.route("/Menu/:id/delete").delete(async (req, res) => {
-  let db_connect = dbo.getDb();
-  let myquery = { _id: new ObjectId(req.params.id) };
+MenuRoutes.route("/Menu/delete").delete(async (req, res) => {
+  let db_connect = dbo.getDb("Menu");
+  console.log(`req body`)
+    
+  console.log(req.body);
+  const menu = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      restaurantId: req.body.restaurantId
+    };
+
+    console.log(menu)
+  
+  let myquery = { restaurantId: menu.restaurantId, name : menu.name };
+  console.log(myquery)
 
   db_connect
-    .collection("Reservation")
+    .collection("Menu")
     .findOneAndDelete(myquery)
     .then(() => {
       console.log("Deleted");

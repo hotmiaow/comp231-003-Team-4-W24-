@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { authLogin } from "../components/Auth/auth";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+// import { authLogin } from "../components/Auth/auth";
+// import { useLocation } from "react-router-dom";
+// import { useParams } from "react-router-dom";
+import { UseAuth } from "../components/Auth/auth";
+// import Cookies from "js-cookie";
+// import { Typography } from "@material-ui/core";
 
 const Login = () => {
+  const {isLoggedIn, userType, authLogin} = UseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,6 +16,10 @@ const Login = () => {
   const par = useParams();
   const { restaurantId } = par;
   var url = "/";
+  const from = location.state?.from?.pathname || "/";
+  console.log(`location state : ${location.state}`);
+
+  console.log(authLogin)
 
   async function handleSubmit(event) {
     console.log({ restaurantId });
@@ -25,10 +32,25 @@ const Login = () => {
       url = "/"; // Or redirect to another default page
       console.log(url);
     }
-    await authLogin(email, password, url);
+      try{
+        console.log(email)
+        console.log(password)
+        console.log(url)
+        const logins = await authLogin(email, password, url);
+
+        console.log(logins);
+            if(logins) {
+                navigate(url)
+            }else{
+              console.error('login failed')
+            }
+      }catch(error){
+        console.error('redirect error, ' + error)
+      }
+    
   }
 
-  const { from } = location.state || { from: { pathname: "/" } };
+  // const { from } = location.state || { from: { pathname: "/" } };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

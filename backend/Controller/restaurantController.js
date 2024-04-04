@@ -15,6 +15,42 @@ async function getAllRestaurants(req, response) {
   }
 };
 
+async function getRestaurantIdByChefId(req,res){
+  let db_connect = dbo.getDb();
+  console.log('test')
+  console.log(req.body)
+
+  const checkId = req.body;
+
+  // console.log(`chef id: ${chefId}`);
+
+  const key = Object.keys(req.body)[0];
+  const value = req.body[key];
+
+  console.log(key);
+  console.log(value);
+
+  if(checkId){
+    let myquery = checkId;
+    console.log(myquery);
+
+    try {
+      var records = await db_connect.collection("Restaurants").findOne(myquery);
+      console.log(records)
+      console.log(records._id);
+  
+      // const id = records._id.toString() ;
+      // console.log(id)
+      console.log(`rest id is read`)
+      res.json(records);
+    } catch (e) {
+      console.log("An error occurred pulling the records. " + e);
+    }
+  }
+
+  
+}
+
 //register new restaurant
 async function registerRestaurant(req, res)  {
   const db_connect = dbo.getDb();
@@ -164,4 +200,4 @@ async function restaurantDeleteById(req, response)  {
     return db_connect.collection("Restaurants").updateOne(myquery, updateDoc);
 }
 
-module.exports = {getAllRestaurants, getRestaurantById, registerRestaurant, restaurantUpdateById, restaurantDeleteById, updateRestaurantAvailability};
+module.exports = {getAllRestaurants, getRestaurantById, getRestaurantIdByChefId, registerRestaurant, restaurantUpdateById, restaurantDeleteById, updateRestaurantAvailability};
