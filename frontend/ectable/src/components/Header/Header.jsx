@@ -6,7 +6,7 @@ import { BiMenu } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 // import { authLogout } from "../Auth/auth";
 import { UseAuth } from "../Auth/auth";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 const NavLinks = [
   {
@@ -45,7 +45,7 @@ const NavLinks = [
 
 const Header = () => {
   const navigate = useNavigate();
-  const {isLoggedIn, userType, restIDs, authLogout} = UseAuth();
+  const {isLoggedIn, userType, userIDs,restIDs, authLogout} = UseAuth();
   // const restID = Cookies.get("restID");
   console.log(restIDs);
 
@@ -144,7 +144,7 @@ const Header = () => {
 
               {userType === "Admin" && (
                 <button
-                  onClick={() => navigate("/Admin")}
+                  onClick={() => navigate(`/Admin/${userIDs}`)}
                   className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center-justify-center rounded-[50px]"
                 >
                   Admin Page
@@ -153,7 +153,7 @@ const Header = () => {
               {/* Additional button for Diner */}
               {userType === "Diner" && (
                 <button
-                  onClick={() => navigate("/BookingManagement")}
+                  onClick={() => navigate(`/BookingManagement/${userIDs}`)}
                   className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center-justify-center rounded-[50px]"
                 >
                   Booking Management
@@ -161,7 +161,7 @@ const Header = () => {
               )}
               {userType === "Readonly" && (
                 <button
-                  onClick={() => navigate("/ROManagement")}
+                  onClick={() => navigate(`/ROManagement${userIDs}`)}
                   className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center-justify-center rounded-[50px]"
                 >
                   View Booking

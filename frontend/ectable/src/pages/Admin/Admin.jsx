@@ -1,7 +1,17 @@
-import React from "react";
+// import React from "react";
 import { Button, Typography, Box } from "@material-ui/core";
 
+// import { useState } from "react";
+
+import { useNavigate } from "react-router";
+
+import { UseAuth } from "../../components/Auth/auth";
+
 const Admin = () => {
+
+  const {userIDs} = UseAuth();
+  const navigate = useNavigate();
+
   return (
     <Box
       style={{ padding: 20, display: "flex", flexDirection: "column", gap: 20 }}
@@ -12,7 +22,7 @@ const Admin = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => (window.location.href = "/restManagement")}
+        onClick={() => navigate(`/restManagement/${userIDs}`)}
         style={{ maxWidth: "500px", alignSelf: "center" }}
       >
         1. Go to Restaurant Management
@@ -20,7 +30,7 @@ const Admin = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => (window.location.href = "/RestaurantSignup")}
+        onClick={() => navigate(`/RestaurantSignup/${userIDs}`)}
         style={{ maxWidth: "500px", alignSelf: "center" }}
       >
         2. Go to Restaurant Signup

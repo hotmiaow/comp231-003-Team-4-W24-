@@ -101,6 +101,7 @@ export const AuthProvider = ({children}) =>{
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState('');
   const [restIDs, setRestIDs] = useState('');
+  const [userIDs, setUserIDs] = useState('');
     
   // useEffect(() => {
   //   const checkLoginStatus = () => {
@@ -118,6 +119,7 @@ export const AuthProvider = ({children}) =>{
       if(isLoggedIn){
         const userID = Cookies.get("userId");
         console.log(`user ID : ${userID}`)
+        setUserIDs(userID);
 
         if(userID){
         try {
@@ -270,10 +272,11 @@ export const AuthProvider = ({children}) =>{
     setIsLoggedIn(false)
     setUserType('');
     setRestIDs('');
+    setUserIDs('');
     
   };
     return (
-      <AuthContext.Provider value={{ isLoggedIn, userType, restIDs, authLogin, authLogout }}>
+      <AuthContext.Provider value={{ isLoggedIn, userType, userIDs,restIDs, authLogin, authLogout }}>
         {children}
       </AuthContext.Provider>
     );

@@ -19,9 +19,9 @@ import {
   TextField,
 } from "@material-ui/core";
 
+// import { UseAuth } from "../../components/Auth/auth.jsx";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import EmailIcon from "@material-ui/icons/Email";
 import IconButton from "@material-ui/core/IconButton";
 
 import { fetchReservations } from "./api-RestManagement";

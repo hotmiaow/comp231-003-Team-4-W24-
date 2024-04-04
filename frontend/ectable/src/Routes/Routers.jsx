@@ -27,14 +27,14 @@ const Routers = () => {
       <Route path="/BookingPage" element={<BookingPage />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/Admin" element={<Admin />} />
-        <Route path="/RestManagement" element={<RestManagement />} />
-        <Route path="/RestaurantSignup" element={<RestaurantSignup />} />
+        <Route path="/Admin/:userId" element={<Admin />} />
+        <Route path="/RestManagement/:userId" element={<RestManagement />} />
+        <Route path="/RestaurantSignup/:userId" element={<RestaurantSignup />} />
         <Route path="/BookingPage/:restaurantId" element={<BookingPage />} />
         <Route path="/RestaurantList" element={<RestaurantList />} />
         <Route path="/Menu/Restaurant/:restaurantId" element={<Menu />} />
-        <Route path="/BookingManagement" element={<BookingManagement />} />
-        <Route path="/ROManagement" element={<ROManagement />} />
+        <Route path="/BookingManagement/:userId" element={<BookingManagement />} />
+        <Route path="/ROManagement/:userId" element={<ROManagement />} />
       </Route>
     </Routes>
   );
