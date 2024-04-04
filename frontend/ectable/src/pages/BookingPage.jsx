@@ -11,6 +11,7 @@ import {
   Typography,
   Dialog,
   DialogTitle,
+  DialogContent,
   DialogActions,
   Card,
   CardMedia,
@@ -24,6 +25,7 @@ import Cookies from "js-cookie";
 const BookingPage = () => {
   const { restaurantId } = useParams();
   const [openDialog, setOpenDialog] = useState(false);
+  const [dialogImage, setDialogImage] = useState("");
 
   const [bookingDetails, setBookingDetails] = useState({
     date: "",
@@ -55,12 +57,17 @@ const BookingPage = () => {
       } else {
         setOpenDialog(true);
       }
-    }); // Add logic here to send booking details to your backend
+    });
   };
 
   const handleClose = () => {
     setOpenDialog(false);
     // Additional logic to redirect the user or reset the form
+  };
+
+  const handleDialogOpen = (image) => {
+    setDialogImage(image);
+    setOpenDialog(true);
   };
 
   const menuItems = [
@@ -181,21 +188,37 @@ const BookingPage = () => {
         <Typography variant="h6">Select Menu Items</Typography>
         {menuItems.map((item) => (
           <Card key={item.name} style={{ display: 'flex', marginBottom: '10px' }}>
-            <div style={{ flex: 1 }}>
+            <CardContent style={{ flex: 1 }}>
               <FormControlLabel
                 control={<Checkbox onChange={handleMenuChange} name={item.name} />}
                 label={`${item.name} - $${item.price}`}
               />
               <Typography>{item.description}</Typography>
-            </div>
+            </CardContent>
             <CardMedia
               style={{ width: '100px' }}
               image={item.image}
               title={item.name}
+              onClick={() => handleDialogOpen(item.image)}
             />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button onClick={() => handleDialogOpen(item.image)} color="primary">View Image</Button>
+            </div>
           </Card>
         ))}
       </FormControl>
+
+      <Dialog open={openDialog} onClose={handleClose} maxWidth="md">
+        <DialogTitle>Image</DialogTitle>
+        <DialogContent>
+          <img src={dialogImage} alt="Menu Item" style={{ width: '100%' }} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
