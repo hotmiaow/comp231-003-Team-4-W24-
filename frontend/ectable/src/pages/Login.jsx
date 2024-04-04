@@ -4,29 +4,44 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 // import { useLocation } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import { UseAuth } from "../components/Auth/auth";
+// import { LocationContext } from "react-router/dist/lib/context";
 // import Cookies from "js-cookie";
 // import { Typography } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+} from "@material-ui/core";
 
 const Login = () => {
-  const {isLoggedIn, userType, authLogin} = UseAuth();
+  const {authLogin} = UseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [FailDialog, setFailDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const par = useParams();
   const { restaurantId } = par;
   var url = "/";
   const from = location.state?.from?.pathname || "/";
+  console.log(`location : ${{location}}`);
+  console.log(from)
   console.log(`location state : ${location.state}`);
 
   console.log(authLogin)
+
+  const handleClose = () =>{
+    setFailDialog(false)
+  }
 
   async function handleSubmit(event) {
     console.log({ restaurantId });
     event.preventDefault();
     console.log(from);
-    if (from === "RestaurantList") {
-      url = `/BookingPage/${restaurantId}`; // Redirect to Booking Page with restaurantId
+    if (from) {
+      url = from; // Redirect to Booking Page with restaurantId
       console.log(url);
     } else {
       url = "/"; // Or redirect to another default page
@@ -43,6 +58,8 @@ const Login = () => {
                 navigate(url)
             }else{
               console.error('login failed')
+              setFailDialog(true);
+              
             }
       }catch(error){
         console.error('redirect error, ' + error)
@@ -101,6 +118,17 @@ const Login = () => {
           </button>
         </form>
       </div>
+        <Dialog open={FailDialog} onClose={handleClose}>
+          <DialogTitle>Login Failed</DialogTitle>
+          <DialogContent>
+            Please try again with correct email and password.
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+          </Dialog>
     </div>
   );
 };

@@ -20,7 +20,7 @@ login.post("/diner/login", async (req, res) => {
       .collection("User")
       .findOne({ email: dinerEmail, password: dinerPwd });
 
-    console.log(check._id);
+    // console.log(check._id);
 
     if (check) {
       console.log("Login Successful!");
@@ -44,6 +44,7 @@ login.post("/diner/login", async (req, res) => {
       });
     } else {
       console.log("Failed to Log in");
+      res.status(401).json({success: false, message:"Failed to Login in. Incorrect email or password."})
     }
   } catch (e) {
     console.error(e);

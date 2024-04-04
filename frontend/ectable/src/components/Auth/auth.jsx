@@ -198,7 +198,7 @@ export const AuthProvider = ({children}) =>{
 
       console.log(response);
 
-      if (response.data) {
+      
         console.log(response.data.message);
         console.log(response.data.id);
         console.log(response.data.accessToken);
@@ -234,7 +234,8 @@ export const AuthProvider = ({children}) =>{
         setIsLoggedIn(true);
         console.log(`Login success`);
         return response.data;
-      }
+      
+
         // const type = await fetchUserType(userId);
         // console.log(type)
         // if(type) {
@@ -256,12 +257,18 @@ export const AuthProvider = ({children}) =>{
         // }
         // else console.log('Error getting user type');
   } catch (e) {
-      console.log(e);
+      
+      if(e.response && e.response.status === 401){
+         console.log("Login failed. Please try again.");
+      }
+      else{
+      console.error("Error occured", e);
       console.log(`login failed`)
-      setIsLoggedIn(false)
-      return null;
-    }
-  };
+      
+      }
+    setIsLoggedIn(false)
+    
+  }};
 
   const authLogout = () => {
     Cookies.remove("accessToken", { path: "/" });
