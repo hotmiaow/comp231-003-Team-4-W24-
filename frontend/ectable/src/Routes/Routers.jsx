@@ -12,6 +12,7 @@ import BookingPage from "../pages/BookingPage";
 import BookingManagement from "../pages/Restaurants/BookingManagement";
 import ROManagement from "../pages/Readonly/ROManagement";
 import Menu from "../pages/Restaurants/Menu";
+import Availability from "../pages/Restaurants/Availability";
 // import { UseAuth } from "../components/Auth/auth";
 
 import { Routes, Route } from "react-router-dom";
@@ -35,6 +36,7 @@ const Routers = () => {
         <Route path="/Menu/Restaurant/:restaurantId" element={<Menu />} />
         <Route path="/BookingManagement/:userId" element={<BookingManagement />} />
         <Route path="/ROManagement/:userId" element={<ROManagement />} />
+        <Route path="/Restaurant/availability/:restaurantid" element={<Availability/>} />
       </Route>
     </Routes>
   );

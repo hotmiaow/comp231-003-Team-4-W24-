@@ -52,14 +52,17 @@ ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
 
   //   .insertOne(Reservation);
     try{
-
           const query = {_id : new ObjectId(req.body.restaurantId)};
-            const check = await db_connect.collection("Restaurants").findOne(query, {projection: { "availability": 1, "_id": 0 } });
+          const check = await db_connect.collection("Restaurants").findOne(query, {projection: { "availability": 1, "_id": 0 } });
+      
+          const customQuery = {restaurantId : Reservation.restaurantId, date:Reservation.date, time:Reservation.time};
+          const customAvailability = await db_connect.collection("availabilities").findOne(customQuery);
+          
             // const bookingquery = { restaurantId : new ObjectId(req.body.restaurantId), date : req.body.date, time: req.body.time }
             // const booking = await db_connect.collection("Reservation").find(bookingquery);
             // console.log(booking);
 
-            const totalAvailability = check.availability;
+            const totalAvailability = customAvailability? customAvailability.availability : check.availability;
 
             console.log(req.body.date)
             console.log(req.body.time)

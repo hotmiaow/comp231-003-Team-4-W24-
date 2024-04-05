@@ -267,6 +267,7 @@ export const AuthProvider = ({children}) =>{
       
       }
     setIsLoggedIn(false)
+    return null;
     
   }};
 

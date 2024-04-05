@@ -32,6 +32,7 @@ app.use(require("./routes/UserRoutes"));
 app.use(require("./routes/ReservationRoutes"));
 app.use(require("./routes/EmailConfirmation"));
 app.use(require("./routes/MenuRoutes"));
+app.use(require("./routes/availability"))
 
 // app.use(require('./routes/Reservation'))
 app.use(require("./Auth/login"));

@@ -145,3 +145,14 @@ content-type: application/json
 {
   "chefId": "660b01d6d3fa15fa75bf44b7"
 }
+
+###
+post http://localhost:5500/Restaurants/65cbdcf6e140698bfe3702a0/availability
+content-type: application/json
+
+{
+  "restaurantId": "65cbdcf6e140698bfe3702a0",
+  "date": "2023-04-03",
+  "time":"12:00",
+  "availability": "60"
+}

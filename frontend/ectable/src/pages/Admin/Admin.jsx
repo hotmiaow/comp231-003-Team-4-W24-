@@ -9,7 +9,7 @@ import { UseAuth } from "../../components/Auth/auth";
 
 const Admin = () => {
 
-  const {userIDs} = UseAuth();
+  const {userIDs, restIDs} = UseAuth();
   const navigate = useNavigate();
 
   return (
@@ -25,7 +25,7 @@ const Admin = () => {
         onClick={() => navigate(`/restManagement/${userIDs}`)}
         style={{ maxWidth: "500px", alignSelf: "center" }}
       >
-        1. Go to Restaurant Management
+        Go to Restaurant Management
       </Button>
       <Button
         variant="contained"
@@ -33,7 +33,15 @@ const Admin = () => {
         onClick={() => navigate(`/RestaurantSignup/${userIDs}`)}
         style={{ maxWidth: "500px", alignSelf: "center" }}
       >
-        2. Go to Restaurant Signup
+        Go to Restaurant Signup
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate(`/Restaurant/availability/${restIDs}`)}
+        style={{ maxWidth: "500px", alignSelf: "center" }}
+      >
+        Restaurant Availability Management
       </Button>
     </Box>
   );
