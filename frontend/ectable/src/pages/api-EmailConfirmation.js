@@ -1,7 +1,7 @@
 import axios from "axios";
 const emailCreateConfirm = async (email) => {
   try {
-    let response = await axios.post(`https://ectable.onrender.com:5500/emailConfirm`, email, {
+    let response = await axios.post(`https://ectable.onrender.com/emailConfirm`, email, {
       
       headers: {
         'Accept': 'application/json',
@@ -18,7 +18,7 @@ const emailCreateConfirm = async (email) => {
 
 const emailUpdateConfirm = async (email) => {
   try {
-    let response = await axios.post(`https://ectable.onrender.com:5500/emailUpdate`, email, {
+    let response = await axios.post(`https://ectable.onrender.com/emailUpdate`, email, {
       
       headers: {
         'Accept': 'application/json',
@@ -35,7 +35,7 @@ const emailUpdateConfirm = async (email) => {
 
 const emailCancelConfirm = async (email) => {
   try {
-    let response = await axios.post(`https://ectable.onrender.com:5500/emailCancel`, email, {
+    let response = await axios.post(`https://ectable.onrender.com/emailCancel`, email, {
       
       headers: {
         'Accept': 'application/json',

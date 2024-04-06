@@ -1,11 +1,15 @@
-const nodeExternals = require("webpack-node-externals");
-const path = require("path");
+import { fileURLToPath } from 'url';
+import path from 'path';
+import nodeExternals from 'webpack-node-externals';
 
-module.exports = {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+
+export default {
   target: "node",
   externals: [nodeExternals()],
   entry: {
-    index: "./src/index.js",
+    index: "./src/main.jsx",
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -13,13 +17,15 @@ module.exports = {
     libraryTarget: "commonjs2",
   },
   module: {
-    //設定你的檔案選項
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: "babel-loader",
       },
     ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
 };

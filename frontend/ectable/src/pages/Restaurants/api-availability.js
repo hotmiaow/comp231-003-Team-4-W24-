@@ -4,7 +4,7 @@ export const updateAvailability = async (info) =>{
     console.log(info);
     
     try{
-        const path = `https://ectable.onrender.com:5500/Restaurants/${info.restID}/availability`;
+        const path = `https://ectable.onrender.com/Restaurants/${info.restID}/availability`;
         console.log(path);
 
         const response = await axios.post(path, info, {

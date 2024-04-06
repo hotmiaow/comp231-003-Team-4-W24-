@@ -1,7 +1,7 @@
 const create = async (user) => {
   try {
     console.log(JSON.stringify(user));
-    let response = await fetch("https://ectable.onrender.com:5500/User/register", {
+    let response = await fetch("https://ectable.onrender.com/User/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -46,7 +46,7 @@ const read = async (params, credentials, signal) => {
 const readEmail = async (params) => {
   try {
 
-    let response = await fetch("https://ectable.onrender.com:5500/User/" + params.dinerId, {
+    let response = await fetch("https://ectable.onrender.com/User/" + params.dinerId, {
       method: "GET",
       headers: {
         Accept: "application/json",
