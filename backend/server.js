@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 
 app.use(
   cors({
-    origin: "https://ectable.netlify.app/Login", 
+    origin: "https://ectable.netlify.app/", 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Accept",
