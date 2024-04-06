@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "./token.env" });
 const ObjectId = require("mongodb").ObjectId;
 
-login.post("/diner/login", async (req, res) => {
+login.post("/api/diner/login", async (req, res) => {
   try {
     const dinerEmail = req.body.email;
     const dinerPwd = req.body.password;

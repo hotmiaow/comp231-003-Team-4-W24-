@@ -1,7 +1,7 @@
 const fetchReadonlyReservations = async (params, credentials, signal) => {
   try {
     let response = await fetch(
-      `https://ectable.onrender.com/Reservation/readonly/${params.readonlyId}`,
+      `https://ectable.onrender.com/api/Reservation/readonly/${params.readonlyId}`,
       {
         method: "GET",
         signal: signal,

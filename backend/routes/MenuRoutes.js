@@ -13,7 +13,7 @@ const {
 } = require("../Controller/restaurantController");
 const { TopologyDescription } = require("mongodb");
 
-MenuRoutes.route("/Menu").get(async function (req, response) {
+MenuRoutes.route("/api/Menu").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
   try {
@@ -24,7 +24,7 @@ MenuRoutes.route("/Menu").get(async function (req, response) {
   }
 });
 
-MenuRoutes.route("/Menu/register").post(async (req, res) => {
+MenuRoutes.route("/api/Menu/register").post(async (req, res) => {
     const db_connect = dbo.getDb("Menu");
     console.log(req.body.restaurantId);
     
@@ -49,7 +49,7 @@ MenuRoutes.route("/Menu/register").post(async (req, res) => {
   }
 );
 
-MenuRoutes.route("/Menu/:id").get(authToken, async (req, res) => {
+MenuRoutes.route("/api/Menu/:id").get(authToken, async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
   const data = await db_connect.collection("Menu").find(myquery).toArray();
@@ -63,7 +63,7 @@ MenuRoutes.route("/Menu/:id").get(authToken, async (req, res) => {
   }
 });
 
-MenuRoutes.route("/Menu/:id/update").put(async (req, res) => {
+MenuRoutes.route("/api/Menu/:id/update").put(async (req, res) => {
   let db_connect = dbo.getDb("Menu");
   console.log("req body")
   console.log(req.body);
@@ -103,7 +103,7 @@ MenuRoutes.route("/Menu/:id/update").put(async (req, res) => {
   }
 });
 
-MenuRoutes.route("/Menu/delete").delete(async (req, res) => {
+MenuRoutes.route("/api/Menu/delete").delete(async (req, res) => {
   let db_connect = dbo.getDb("Menu");
   console.log(`req body`)
     
@@ -128,7 +128,7 @@ MenuRoutes.route("/Menu/delete").delete(async (req, res) => {
     });
 });
 
-MenuRoutes.route("/Menu/Restaurant/:restaurantId").get(async (req, res) => {
+MenuRoutes.route("/api/Menu/Restaurant/:restaurantId").get(async (req, res) => {
   const db_connect = dbo.getDb();
   const restaurantId = req.params.restaurantId;
   console.log(restaurantId);

@@ -10,7 +10,7 @@ const authToken = require("../Auth/token");
 
 const{updateRestaurantAvailability} = require('../Controller/restaurantController')
 
-ReservationRoutes.route("/Reservation").get(async function (req, response) {
+ReservationRoutes.route("/api/Reservation").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
   try {
@@ -21,7 +21,7 @@ ReservationRoutes.route("/Reservation").get(async function (req, response) {
   }
 });
 
-ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
+ReservationRoutes.route("/api/Reservation/register").post(async (req, res) => {
   const db_connect = dbo.getDb();
   console.log(req.body.restaurantId);
   const Reservation = {
@@ -103,7 +103,7 @@ ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
         res.status(400).json({ success: false, message:"Insufficient availability for the requested booking", remain : remainingAvailability, total : totalBooked});}
 });
 
-ReservationRoutes.route("/Reservation/:id").get(authToken, async (req, res) => {
+ReservationRoutes.route("/api/Reservation/:id").get(authToken, async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
   const data = await db_connect.collection("Reservation").findOne(myquery);
@@ -117,7 +117,7 @@ ReservationRoutes.route("/Reservation/:id").get(authToken, async (req, res) => {
   }
 });
 
-ReservationRoutes.route("/Reservation/:id/update").put(async (req, res) => {
+ReservationRoutes.route("/api/Reservation/:id/update").put(async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
 
@@ -154,7 +154,7 @@ ReservationRoutes.route("/Reservation/:id/update").put(async (req, res) => {
   }
 });
 
-ReservationRoutes.route("/Reservation/:id/delete").delete(async (req, res) => {
+ReservationRoutes.route("/api/Reservation/:id/delete").delete(async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
 
@@ -166,7 +166,7 @@ ReservationRoutes.route("/Reservation/:id/delete").delete(async (req, res) => {
     });
 });
 
-ReservationRoutes.route("/Reservation/find").get(
+ReservationRoutes.route("/api/Reservation/find").get(
   authToken,
   async (req, res) => {
     const db_connect = dbo.getDb();
@@ -200,7 +200,7 @@ ReservationRoutes.route("/Reservation/find").get(
   }
 );
 
-ReservationRoutes.route("/Reservation/User/:userId").get(async (req, res) => {
+ReservationRoutes.route("/api/Reservation/User/:userId").get(async (req, res) => {
   const db_connect = dbo.getDb("Reservation"); 
   const userId = req.params.userId; 
 
@@ -225,7 +225,7 @@ ReservationRoutes.route("/Reservation/User/:userId").get(async (req, res) => {
   }
 });
 
-ReservationRoutes.route("/Reservation/Admin/:adminId").get(async (req, res) => {
+ReservationRoutes.route("/api/Reservation/Admin/:adminId").get(async (req, res) => {
   const db_connect = dbo.getDb("Restaurant");
   const adminId = req.params.adminId;
 
@@ -274,7 +274,7 @@ ReservationRoutes.route("/Reservation/Admin/:adminId").get(async (req, res) => {
   }
 });
 
-ReservationRoutes.route("/Reservation/readonly/:readonlyId").get(
+ReservationRoutes.route("/api/Reservation/readonly/:readonlyId").get(
   async (req, res) => {
     const db_connect = dbo.getDb("Restaurant");
     const readonlyId = req.params.readonlyId;

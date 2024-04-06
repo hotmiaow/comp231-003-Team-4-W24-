@@ -9,7 +9,7 @@ const ObjectId = require("mongodb").ObjectId;
 const authToken = require("../Auth/token");
 console.log(authToken);
 
-UserRoutes.route("/User/register").post(async (req, res) => {
+UserRoutes.route("/api/User/register").post(async (req, res) => {
   const db_connect = dbo.getDb();
   console.log(req.body.email);
 
@@ -37,7 +37,7 @@ UserRoutes.route("/User/register").post(async (req, res) => {
   }
 });
 
-UserRoutes.route("/User").get(async function (req, response) {
+UserRoutes.route("/api/User").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
   try {
@@ -48,7 +48,7 @@ UserRoutes.route("/User").get(async function (req, response) {
   }
 });
 
-UserRoutes.route("/User/:id").get(async (req, res) => {
+UserRoutes.route("/api/User/:id").get(async (req, res) => {
   const db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
   const data = await db_connect.collection("User").findOne(myquery);
@@ -62,7 +62,7 @@ UserRoutes.route("/User/:id").get(async (req, res) => {
   }
 });
 
-UserRoutes.route("/User/Email/:id").get(async (req, res) => {
+UserRoutes.route("/api/User/Email/:id").get(async (req, res) => {
   const db_connect = dbo.getDb();
   console.log(req.body);
     let myquery = { _id: new ObjectId(req.params.dinerId) };
@@ -77,7 +77,7 @@ UserRoutes.route("/User/Email/:id").get(async (req, res) => {
   }
 });
 
-UserRoutes.route("/User/:id/update").post(async (req, response) => {
+UserRoutes.route("/api/User/:id/update").post(async (req, response) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
 

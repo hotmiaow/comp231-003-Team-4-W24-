@@ -4,8 +4,8 @@ const emailConfirmationRouter = express.Router();
 
 const {emailConfirm, emailUpdateConfirm, emailCancelConfirm} = require("../Controller/emailConfirm");
 
-emailConfirmationRouter.post("/emailConfirm", emailConfirm);
-emailConfirmationRouter.post("/emailUpdate", emailUpdateConfirm);
-emailConfirmationRouter.post("/emailCancel", emailCancelConfirm);
+emailConfirmationRouter.post("/api/emailConfirm", emailConfirm);
+emailConfirmationRouter.post("/api/emailUpdate", emailUpdateConfirm);
+emailConfirmationRouter.post("/api/emailCancel", emailCancelConfirm);
 
 module.exports = emailConfirmationRouter;

@@ -16,12 +16,12 @@ const {
   myRestaurant
 } = require("../Controller/restaurantController");
 
-restaurantRoutes.get("/restaurants", getAllRestaurants);
-restaurantRoutes.get("/restaurants/:id", getRestaurantById);
-restaurantRoutes.post("/restaurants/register", registerRestaurant);
-restaurantRoutes.post("/restaurants/:id/update", restaurantUpdateById);
-restaurantRoutes.delete("/restaurants/:id/delete", restaurantDeleteById);
-restaurantRoutes.post("/restaurants/chef", getRestaurantIdByChefId);
-restaurantRoutes.get("/MyRestaurants", myRestaurant);
+restaurantRoutes.get("/api/restaurants", getAllRestaurants);
+restaurantRoutes.get("/api/restaurants/:id", getRestaurantById);
+restaurantRoutes.post("/api/restaurants/register", registerRestaurant);
+restaurantRoutes.post("/api/restaurants/:id/update", restaurantUpdateById);
+restaurantRoutes.delete("/api/restaurants/:id/delete", restaurantDeleteById);
+restaurantRoutes.post("/api/restaurants/chef", getRestaurantIdByChefId);
+restaurantRoutes.get("/api/MyRestaurants", myRestaurant);
 
 module.exports = restaurantRoutes;

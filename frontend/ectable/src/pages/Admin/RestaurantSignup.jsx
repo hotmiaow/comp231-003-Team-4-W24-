@@ -96,7 +96,7 @@ export default function RestaurantSignup() {
   useEffect(() => {
     const userID = getCookie("userId");
     if (userID) {
-      fetch(`https://ectable.onrender.com/User/${userID}`)
+      fetch(`https://ectable.onrender.com/api/User/${userID}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");

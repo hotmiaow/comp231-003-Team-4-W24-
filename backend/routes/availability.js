@@ -6,7 +6,7 @@ const dbo = require("../db/conn");
 
 const ObjectId = require("mongodb").ObjectId;
 
-availabilityRoutes.route("/Restaurants/:id/availability").post(async (req, res) => {
+availabilityRoutes.route("/api/Restaurants/:id/availability").post(async (req, res) => {
   const db_connect = dbo.getDb("availabilities");
   console.log(req.body.availability);
 
