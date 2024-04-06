@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-// import { authLogin } from "../components/Auth/auth";
-// import { useLocation } from "react-router-dom";
-// import { useParams } from "react-router-dom";
 import { UseAuth } from "../components/Auth/auth";
-// import { LocationContext } from "react-router/dist/lib/context";
-// import Cookies from "js-cookie";
-// import { Typography } from "@material-ui/core";
+
 import {
   Button,
   Dialog,
@@ -41,10 +36,10 @@ const Login = () => {
     event.preventDefault();
     console.log(from);
     if (from) {
-      url = from; // Redirect to Booking Page with restaurantId
+      url = from;
       console.log(url);
     } else {
-      url = "/"; // Or redirect to another default page
+      url = "/";
       console.log(url);
     }
       try{
@@ -66,8 +61,6 @@ const Login = () => {
       }
     
   }
-
-  // const { from } = location.state || { from: { pathname: "/" } };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

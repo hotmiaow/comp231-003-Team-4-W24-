@@ -5,9 +5,82 @@ const email = process.env.EMAIL;
 const pass = process.env.PASS;
 const Mail = require('nodemailer/lib/mailer');
 
-// const logo = require('./images/logo.png');
-
 async function emailConfirm(req,res){
+
+    const {date, time, restaurant, userEmail, people}= req.body;
+    console.log("date : " + date);
+    console.log("time : " + time);
+    console.log("restaurant : " + restaurant);
+    console.log("people : " + people);
+
+    let transporter = nodeemailer.createTransport({
+        service:'gmail',
+        auth:{
+        user: email, 
+        pass: pass
+        }
+    });
+    
+    console.log(transporter)
+
+    let mailGenerator = new Mailgen({
+        theme : "default",
+        product:{
+            name:'ECTable',
+            link:"http://localhost:5173"
+        }
+    });
+
+    let emailContent = {
+    
+            
+            body:{
+                intro: 'Your reservation has been  confirmed!',
+                table: {
+                    data: [
+                        {
+                            item: 'Restaurant',
+                            description: restaurant
+                        },
+                        {
+                            item: 'Date',
+                            description: date
+                        },
+                        {
+                            item: 'Time',
+                            description: time
+                        },
+                        {
+                            item: 'People',
+                            description: people
+                        }
+                    ]
+                },
+                outro:'Thank you for reservation.'  
+            }
+        }
+
+    let mail = mailGenerator.generate(emailContent);
+
+    let message = {
+        
+        from : email,
+        to : userEmail,
+        subject : 'Booking Confirmation',
+        html : mail
+        
+    }
+
+    transporter.sendMail(message).then(()=>{
+        return res.status(201).json({
+            message: "Confirmation Email sent."
+        })
+    }).catch(error =>{
+        return res.status(500).json({error: error.message})
+    })
+
+}
+async function emailUpdateConfirm(req,res){
 
     // const {names, date, time, restaurant, userEmail, people}= req.body;
     const {date, time, restaurant, userEmail, people}= req.body;
@@ -40,7 +113,7 @@ async function emailConfirm(req,res){
             body:{
 
                 // name: names,
-                intro: 'Your reservation has been  confirmed!',
+                intro: 'Your reservation has been updated!',
                 table: {
                     data: [
                         {
@@ -64,13 +137,6 @@ async function emailConfirm(req,res){
                 outro:'Thank you for reservation.'  
             }
         }
- 
-    
-    // let emailcontext = emailContent(names,date,time,restaurant);
-    // let emailBody = mailGenerator.generate(emailcontext);
-    // let emailText = mailGenerator.generatePlaintext(emailcontext);
-
-    // require('fs').writeFileSync('preview.html', emailBody, 'utf8');
 
     let mail = mailGenerator.generate(emailContent);
 
@@ -78,16 +144,16 @@ async function emailConfirm(req,res){
         
         from : email,
         to : userEmail,
-        subject : 'Booking Confirmation',
+        subject : 'Booking Updated',
         html : mail
         
     }
 
-    // console.log(message)
-
+    console.log(message)
+    console.log("error??");
     transporter.sendMail(message).then(()=>{
         return res.status(201).json({
-            message: "Confirmation Email sent."
+            message: "Booking Update Confirmation Email sent."
         })
     }).catch(error =>{
         return res.status(500).json({error: error.message})
@@ -95,6 +161,84 @@ async function emailConfirm(req,res){
 
 }
 
-module.exports = emailConfirm;
+async function emailCancelConfirm(req,res){
+
+    const {date, time, restaurant, userEmail, people}= req.body;
+    console.log("date : " + date);
+    console.log("time : " + time);
+    console.log("restaurant : " + restaurant);
+    console.log("people : " + people);
+
+    let transporter = nodeemailer.createTransport({
+        service:'gmail',
+        auth:{
+        user: email, 
+        pass: pass
+        }
+    });
+    
+    console.log(transporter)
+
+    let mailGenerator = new Mailgen({
+        theme : "default",
+        product:{
+            name:'ECTable',
+            link:"http://localhost:5173"
+        }
+    });
+
+    let emailContent = {
+    
+            
+            body:{
+
+                intro: 'Your reservation has been cancelled!',
+                table: {
+                    data: [
+                        {
+                            item: 'Restaurant',
+                            description: restaurant
+                        },
+                        {
+                            item: 'Date',
+                            description: date
+                        },
+                        {
+                            item: 'Time',
+                            description: time
+                        },
+                        {
+                            item: 'People',
+                            description: people
+                        }
+                    ]
+                },
+                outro:"Your reservation has been cancelled. We're looking forward to serving you in the near future and hope to see you soon!" 
+            }
+        }
+
+    let mail = mailGenerator.generate(emailContent);
+
+    let message = {
+        
+        from : email,
+        to : userEmail,
+        subject : 'Booking Cancelled',
+        html : mail
+        
+    }
+
+
+    transporter.sendMail(message).then(()=>{
+        return res.status(201).json({
+            message: "Booking Cancell Confirmation Email sent."
+        })
+    }).catch(error =>{
+        return res.status(500).json({error: error.message})
+    })
+
+}
+
+module.exports = {emailConfirm, emailUpdateConfirm, emailCancelConfirm};
 
     

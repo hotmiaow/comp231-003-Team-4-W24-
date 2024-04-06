@@ -1,7 +1,5 @@
 // frontend/ectable/src/pages/RestaurantDetail.jsx
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
@@ -13,10 +11,7 @@ import image4 from "../../assets/images/image4.jpg";
 import image5 from "../../assets/images/image5.jpg";
 import image6 from "../../assets/images/image6.jpg";
 
-// Assuming you have an API service to fetch restaurant details
 import { list } from "./api-restaurant";
-
-
 
 const styles = {
   container: {
@@ -64,7 +59,6 @@ const RestaurantList = () => {
     "image4.jpg": image4,
     "image5.jpg": image5,
     "image6.jpg": image6,
-    // Add more mappings as needed
   };
 
   if (error) return <div>Error: {error}</div>;
@@ -80,9 +74,6 @@ const RestaurantList = () => {
           onClick={()=> navigate(`../BookingPage/${restaurant._id}`)}
         >
           <div style={styles.content}>
-            {/*
-            <img src={restaurant.photo} alt={restaurant.name} />
-      */}
             <img
               src={imageMap[restaurant.selectedImage]}
               alt={restaurant.name}
@@ -96,7 +87,6 @@ const RestaurantList = () => {
             <p>Phone : {restaurant.phone}</p>
             <p>Description : {restaurant.description}</p>
 
-            {/* Link to the restaurant detail page */}
             <Link to={`../BookingPage/${restaurant._id}`} style={styles.link}>
               Book Now
             </Link>

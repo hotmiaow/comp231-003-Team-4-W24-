@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   DialogActions
-
 } from "@material-ui/core";
 
 import {UseAuth} from "../../components/Auth/auth";
@@ -34,9 +33,7 @@ const Availability = () => {
         {
             setAvailability(value);
         }
-      
     }
-
     const handleSubmit = async(event) =>{
         event.preventDefault();
 
@@ -46,7 +43,6 @@ const Availability = () => {
             time: time,
             availability : availability
         }
-
         console.log(info)
 
         try{
@@ -74,61 +70,70 @@ const Availability = () => {
         setOpen(false);
     }
 
-
     return (
         
     <div>
         <Typography variant="h4" gutterBottom>
             Restaurant Availability Management
         </Typography>
-        <form onSubmit={handleSubmit}>
-            <TextField
-            label="date"
-            type="date"
-            name="date"
-            value={date}
-            onChange={handleInputChange}
-            // helperText="Please select specific date"
-            InputLabelProps={{ shrink: true }}
-            required
-            />
-            <TextField
-            select
-            label="time"
-            name="time"
-            value={time}
-            onChange={handleInputChange}
-            // helperText="Please select specific time slot"
-            required
-            >
-            {[
-                "12:00",
-                "13:00",
-                "14:00",
-                "15:00",
-                "16:00",
-                "17:00",
-                "18:00",
-                "19:00",
-                "20:00",
-                "21:00",
-            ].map((option) => (
-                <MenuItem key={option} value={option}>
-                {option}
-                </MenuItem>
-            ))}
-            </TextField>
-            <TextField
-            label="availability"
-            type="number"
-            name="availability"
-            value={availability}
-            onChange={handleInputChange}
-            required
-            />
+        <form onSubmit={handleSubmit} className="flex space-x-4">
+            <div>
+                <TextField
+                label="date"
+                type="date"
+                name="date"
+                value={date}
+                onChange={handleInputChange}
+                helperText="Please select specific date"
+                InputLabelProps={{ shrink: true }}
+                required
+                />
+            </div>
+            <div>
+                <TextField className="w-45"
+                select
+                label="time"
+                name="time"
+                value={time}
+                onChange={handleInputChange}
+                helperText="Please select specific time slot"
+                required
+                >
+                {[
+                    "12:00",
+                    "13:00",
+                    "14:00",
+                    "15:00",
+                    "16:00",
+                    "17:00",
+                    "18:00",
+                    "19:00",
+                    "20:00",
+                    "21:00",
+                ].map((option) => (
+                    <MenuItem key={option} value={option}>
+                    {option}
+                    </MenuItem>
+                ))}
+                </TextField>
+            </div>
+            <div>
+                 <TextField
+                label="availability"
+                type="number"
+                name="availability"
+                value={availability}
+                onChange={handleInputChange}
+                helperText="Please select specific availability for specifc date and time."
+                required
+                />
+            </div>
+        <div className="pt-4">
             <Button type="submit" color="primary" variant="contained">
-            Update
+                Update
             </Button>
+        </div>
+           
         </form>
         <Dialog open={open} onClose={handleClose}>
             <DialogContent>
@@ -142,7 +147,5 @@ const Availability = () => {
     )
     
 }
-
-
 
 export default Availability;

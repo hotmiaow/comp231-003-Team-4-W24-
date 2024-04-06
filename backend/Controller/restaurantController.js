@@ -1,9 +1,7 @@
 const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
+const jwt = require('jsonwebtoken');
 
-
-// This section will help you get a list of all the records.
-// get all restaurants
 async function getAllRestaurants(req, response) {
   let db_connect = dbo.getDb();
 
@@ -22,8 +20,6 @@ async function getRestaurantIdByChefId(req,res){
 
   const checkId = req.body;
 
-  // console.log(`chef id: ${chefId}`);
-
   const key = Object.keys(req.body)[0];
   const value = req.body[key];
 
@@ -38,20 +34,16 @@ async function getRestaurantIdByChefId(req,res){
       var records = await db_connect.collection("Restaurants").findOne(myquery);
       console.log(records)
       console.log(records._id);
-  
-      // const id = records._id.toString() ;
-      // console.log(id)
+
       console.log(`rest id is read`)
       res.json(records);
     } catch (e) {
       console.log("An error occurred pulling the records. " + e);
     }
   }
-
   
 }
 
-//register new restaurant
 async function registerRestaurant(req, res)  {
   const db_connect = dbo.getDb();
   const restaurant = {
@@ -68,6 +60,10 @@ async function registerRestaurant(req, res)  {
     readonlyEmail: req.body.readonlyEmail,
     selectedImage: req.body.selectedImage,
     adminId: req.body.adminId,
+    readonlyId: req.body.readonlyId,
+    availability: req.body.availability,
+    chefId: req.body.chefId,
+    chefEmail: req.body.chefEmail
   };
 
   const check = await db_connect
@@ -86,7 +82,6 @@ async function registerRestaurant(req, res)  {
   }
 };
 
-// This section will help you get a single record by id
 async function getRestaurantById(req, res) {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
@@ -101,21 +96,7 @@ async function getRestaurantById(req, res) {
   }
 };
 
-// // This section will help you create a new record.
-// restaurantRoutes.route("/record/add").post(function (req, response) {
-//  let db_connect = dbo.getDb();
-//  let myobj = {
-//    name: req.body.name,
-//    position: req.body.position,
-//    level: req.body.level,
-//  };
-//  db_connect.collection("records").insertOne(myobj, function (err, res) {
-//    if (err) throw err;
-//    response.json(res);
-//  });
-// });
 
-// This section will help you update a record by id.
 async function restaurantUpdateById(req, response) {
     let db_connect = dbo.getDb();
     let myquery = { _id: new ObjectId(req.params.id) };
@@ -123,16 +104,6 @@ async function restaurantUpdateById(req, response) {
 
     let update = {};
     let query = [
-      // "name",
-      // "location",
-      // "photo",
-      // "rating",
-      // "cuisine",
-      // "description",
-      // "closing",
-      // "opening",
-      // "phone",
-      // "email",
       "name",
       "location",
       "photo",
@@ -172,7 +143,6 @@ async function restaurantUpdateById(req, response) {
       });
   };
 
-// This section will help you delete a record
 async function restaurantDeleteById(req, response)  {
     let db_connect = dbo.getDb();
     let myquery = { _id: new ObjectId(req.params.id) };
@@ -200,4 +170,19 @@ async function restaurantDeleteById(req, response)  {
     return db_connect.collection("Restaurants").updateOne(myquery, updateDoc);
 }
 
-module.exports = {getAllRestaurants, getRestaurantById, getRestaurantIdByChefId, registerRestaurant, restaurantUpdateById, restaurantDeleteById, updateRestaurantAvailability};
+async function myRestaurant(req, response) {
+  let db_connect = dbo.getDb();
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  adminEmail = decoded.email;
+
+  try {
+    var records = await db_connect.collection("Restaurants").find({ adminEmail: adminEmail }).toArray();
+    response.json(records);
+  } catch (e) {
+    console.log("An error occurred pulling the records. " + e);
+  }
+};
+  
+
+module.exports = {getAllRestaurants, getRestaurantById, getRestaurantIdByChefId, registerRestaurant, restaurantUpdateById, restaurantDeleteById, updateRestaurantAvailability, myRestaurant};

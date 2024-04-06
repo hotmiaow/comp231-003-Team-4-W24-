@@ -42,6 +42,24 @@ const read = async (params, credentials, signal) => {
     console.log(err);
   }
 };
+
+const readEmail = async (params) => {
+  try {
+
+    let response = await fetch("http://localhost:5500/User/" + params.dinerId, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        
+      },
+    });
+    return response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const update = async (params, credentials, user) => {
   try {
     let response = await fetch("/User/" + params.userId, {
@@ -73,4 +91,4 @@ const remove = async (params, credentials) => {
     console.log(err);
   }
 };
-export { create, list, read, update, remove };
+export { create, list, read,readEmail,update, remove };

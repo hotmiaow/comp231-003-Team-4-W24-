@@ -156,3 +156,6 @@ content-type: application/json
   "time":"12:00",
   "availability": "60"
 }
+
+###
+get  http://localhost:5500/User/Email/65eb6079b82acdbc4694972f

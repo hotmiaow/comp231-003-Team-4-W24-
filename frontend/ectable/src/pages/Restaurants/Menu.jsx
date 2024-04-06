@@ -20,30 +20,18 @@ import {
 import {createMenu, updateMenu,removeMenu} from "./api-menu"
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function Menu() {
   const restID = Cookies.get("restID");
   console.log(`Rest ID: ${restID}`);
   const { restaurantId } = useParams();
   const [menuItems, setMenuItems] = useState([]);
-  // const [formFields, setFormFields] = useState([
-  //   { name: '', description: '', price: '' },
-  // ])
+
    const [newMenuItem, setNewMenuItem] = useState({ name: '', description: '', price: '' });
    const [isDeleted, setIsDeleted] = useState(false);
    const [isUpdated, setIsUpdated] = useState(false);
    const [open, setOpen] = useState(false);
-   const [editMenu, setEditMenu] = useState([]);
-   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  const editMenus = (updatedItem) => {
-    setEditItem((currentItems) => 
-      currentItems.map((item) => 
-        item._id === updatedItem._id ? updatedItem : item
-      )
-    );
-  };
 
   const fetchMenu = async () => {
         try {
@@ -68,36 +56,8 @@ function Menu() {
     fetchMenu();
   }, [restaurantId, isUpdated, isDeleted]);
 
-  // const handleFormChange = (event, index) => {
-  //   let data = [...formFields];
-  //   data[index][event.target.name] = event.target.value;
-  //   setFormFields(data);
-  // }
-
-  // const submit = (e) => {
-  //   e.preventDefault();
-  //   console.log(formFields)
-  // }
-
-  // const addFields = () => {
-  //   let object = {
-  //     name: '',
-  //     description: '',
-  //     price:''
-  //   }
-
-  //   setFormFields([...formFields, object])
-  // }
-
-  // const removeFields = (index) => {
-  //   let data = [...formFields];
-  //   data.splice(index, 1)
-  //   setFormFields(data)
-  // }
-
   const handleDelete = async (item) => {
-    // Implement functionality to delete an item by its id
-    // Call API to delete the item, then fetch and update the menu items list
+
       console.log(item);
       console.log(restID)
 
@@ -116,8 +76,7 @@ function Menu() {
   };
 
   const handleAdd = async () => {
-    // Implement functionality to add a new menu item
-    // Call API to add the new item, then fetch and update the menu items list
+
     if(newMenuItem.name &&  newMenuItem.description && newMenuItem.price)
     {
         
@@ -189,7 +148,6 @@ function Menu() {
         }
         else{
           console.log('update successful', response)
-          // setShowSuccessDialog(true);
           setIsUpdated(true);
           editMenus(response.data);
           setNewMenuItem({ name: '', description: '', price: '' });
@@ -197,8 +155,7 @@ function Menu() {
       }
       catch (e){
         console.log('update failed', e.errorMessage)
-        // setShowSuccessDialog(false);
-        // setIsUpdated(false);
+
       }
     };
 
@@ -235,8 +192,9 @@ function Menu() {
                 <TextField name="price" value={newMenuItem.price} onChange={handleChange} placeholder="Price" />
               </TableCell>
               <TableCell>
-                <Button onClick={handleAdd}>Add</Button>
-                {/* <Button onClick={handleDelete}>Delete</Button> */}
+                <IconButton onClick={handleAdd}>
+                <AddCircleOutlineIcon/>
+                </IconButton>
               </TableCell>
             </TableRow>
           </TableBody>

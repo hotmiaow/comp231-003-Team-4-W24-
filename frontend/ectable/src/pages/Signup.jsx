@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -48,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const create = async (user) => {
-//   return { error: null }; // Simulated API call
-// };
 
 export default function Signup() {
   const classes = useStyles();
@@ -60,7 +57,7 @@ export default function Signup() {
     password: "",
     email: "",
     phone: "",
-    type: "Diner", // Default value
+    type: "Diner"
   });
 
   const [open, setOpen] = useState(false);

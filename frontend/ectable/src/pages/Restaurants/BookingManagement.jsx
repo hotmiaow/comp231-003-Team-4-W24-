@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { readUserId, remove, update } from "../api-Reservation";
+import {readEmail} from "../api-user";
+import {emailUpdateConfirm, emailCancelConfirm} from "../api-EmailConfirmation";
+import {UseAuth} from "../../components/Auth/auth";
 
 import {
   Table,
@@ -15,17 +18,16 @@ import {
   DialogActions,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   TextField,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import EmailIcon from "@material-ui/icons/Email";
 import IconButton from "@material-ui/core/IconButton";
 
 
 const token = Cookies.get("accessToken");
 function BookingManagement() {
+  const {isLoggedIn} = UseAuth();
   const [reservations, setReservations] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
@@ -33,13 +35,15 @@ function BookingManagement() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     useEffect(() => {
-      fetchReservations();
-    }, []);
+      if(isLoggedIn){
+          fetchReservations();
+      }
+    }, [isLoggedIn]);
 
     const controller = new AbortController();
     const signal = controller.signal;
     const credentials = {
-      t: Cookies.get("accessToken"), // Example: Retrieving an auth token from cookies
+      t: Cookies.get("accessToken")
     };
 
       const fetchReservations = async () => {
@@ -49,59 +53,95 @@ function BookingManagement() {
         if (!userId) return;
         const data = await readUserId({ userId }, credentials, signal);
         console.log(data)
-        setReservations(data);
+
+      try {
+          const emailInfos = await Promise.all(data.map(async item => {
+            if (item.dinerId) {
+              const emailInfo = await readEmail(item);
+              return { ...item, dinerEmail: emailInfo.email }; 
+            } else {
+              console.log('Missing dinerId for item:', item);
+              return item; 
+            }
+          }));
+
+          console.log(emailInfos);
+          setReservations(emailInfos);
+
+        } catch (e) {
+          console.log(`Error fetching reservation emails: ${e}`);
+        }
       };
 
       const handleDelete = async (reservation) => {
-      // Implement remove method
+
       setSelectedReservation(reservation);
       console.log(reservation._id)
       const params = {userId : reservation._id};
       console.log(params.userId);
       const credentials = {t:token};
       console.log(credentials)
+
+      const email = {
+        restaurant: reservation.restaurantName,
+        date : reservation.date,
+        time : reservation.time,
+        people : reservation.people,
+        userEmail : reservation.dinerEmail
+      }
       
       remove(params, credentials).then(()=>{
         console.log('Reservation canceled');
+        emailCancelSend(email);
         setShowDeleteDialog(true);
-      })};
-  
+      })
+      
+    };
 
       const handleEdit = (reservation) => {
         console.log(reservation)
       
         setSelectedReservation(reservation);
+        console.log(reservation.dinerEmail)
         setOpen(true);
     };
 
       const handleDeleteClose = async () =>{
-        setShowDeleteDialog(false);
-        await fetchReservations();
+        handleClose();
       }
 
       const handleClose = () => {
+        setShowDeleteDialog(false);
+        setShowSuccessDialog(false);
+        setSelectedReservation('');
         setOpen(false);
-        setSelectedReservation(null);
+        fetchReservations();
       };
 
     const handleCloseSuccessDialog = () =>{
-      setShowSuccessDialog(false);
       handleClose();
     }
 
-  
     const handleSave = async (reservation) => {
-      // Implement update method
       console.log(selectedReservation.date);
       console.log(selectedReservation.time);
       console.log(selectedReservation.people);
       console.log(selectedReservation._id);
-
+      console.log(selectedReservation.dinerEmail)
+     
       const updatedReservation = {
         date : selectedReservation.date,
         time : selectedReservation.time,
         people : selectedReservation.people
       };
+
+      const email = {
+        restaurant: selectedReservation.restaurantName,
+        date : selectedReservation.date,
+        time : selectedReservation.time,
+        people : selectedReservation.people,
+        userEmail : selectedReservation.dinerEmail
+      }
 
       const credentials = {t:token};
 
@@ -121,6 +161,7 @@ function BookingManagement() {
         }
         else{
           console.log('update successful', response)
+          emailUpdateSend(email);
           setShowSuccessDialog(true);
           await fetchReservations();
         }
@@ -132,19 +173,36 @@ function BookingManagement() {
     };
 
   const handleChange = (name, value) => {
-    // Update selected booking state with new value
     setSelectedReservation({ ...selectedReservation, [name]: value });
   };
 
-  const handleEmail = (reservation) => {
-    const emailSubject = encodeURIComponent(
-      `Reservation at ${reservation.restaurantName}`
-    );
-    const emailBody = encodeURIComponent(
-      `I have a reservation on ${reservation.date} at ${reservation.time} for ${reservation.people} people.`
-    );
-    window.location.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+    const emailUpdateSend = async (Email) => {
+    
+      emailUpdateConfirm(Email)
+      .then((data) => {
+        console.log(Email);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      console.log(selectedReservation.dinerEmail)
   };
+
+  const emailCancelSend = async(deleteData) =>{
+      
+    await emailCancelConfirm(deleteData)
+      .then((data) => {
+        console.log(deleteData);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      console.log(selectedReservation.dinerEmail)
+      console.log(deleteData.dinerEmail)
+  }
 
   return (
     <div>
@@ -157,6 +215,7 @@ function BookingManagement() {
               <TableRow>
                 <TableCell>Reservation id</TableCell>
                 <TableCell>Restaurant Name</TableCell>
+                <TableCell>Diner Email</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Time</TableCell>
                 <TableCell>People</TableCell>
@@ -170,6 +229,7 @@ function BookingManagement() {
                   <TableRow key={index}>
                     <TableCell>{reservation._id}</TableCell>
                     <TableCell>{reservation.restaurantName}</TableCell>
+                    <TableCell>{reservation.dinerEmail}</TableCell>
                     <TableCell>{reservation.date}</TableCell>
                     <TableCell>{reservation.time}</TableCell>
                     <TableCell>{reservation.people}</TableCell>
@@ -189,9 +249,6 @@ function BookingManagement() {
                         onClick={() => handleDelete(reservation)}
                       >
                         <DeleteIcon />
-                      </IconButton>
-                      <IconButton onClick={() => handleEmail(reservation)}>
-                        <EmailIcon />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -230,17 +287,28 @@ function BookingManagement() {
               <Dialog open={showSuccessDialog} onClose={handleCloseSuccessDialog}>
                 <DialogTitle>Edit Booking</DialogTitle>
                 <DialogContent>
-                  <p>The booking has been successfully updated.</p>
+                  The booking has been successfully updated.
+                  </DialogContent>
+                  <DialogContent>
+                  Updated booking email confirmation has been sent to your email
+                  </DialogContent>
+                   <DialogContent>
+                   {selectedReservation && <p>{selectedReservation.dinerEmail}</p>}
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseSuccessDialog}>OK</Button>
                 </DialogActions>
                 </Dialog>
-
                 <Dialog open={showDeleteDialog} onClose={handleDeleteClose}>
-                <DialogTitle>Edit Booking</DialogTitle>
+                <DialogTitle>Cancel Booking</DialogTitle>
                 <DialogContent>
-                  <p>The booking has been successfully cancelled.</p>
+                  The booking has been successfully cancelled.
+                </DialogContent>
+                <DialogContent>
+                  Booking cancellation email confirmation has been sent to your email    
+                  </DialogContent>
+                <DialogContent>
+                  {selectedReservation && <p>{selectedReservation.dinerEmail}</p>}
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleDeleteClose}>OK</Button>
@@ -249,5 +317,4 @@ function BookingManagement() {
     </div>
   );
 }
-
 export default BookingManagement;

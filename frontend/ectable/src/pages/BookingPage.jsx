@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { create } from "./api-Reservation";
-import emailConfirm from "./api-EmailConfirmation";
+import {emailCreateConfirm} from "./api-EmailConfirmation";
 import { read } from "./Restaurants/api-restaurant";
 import { fetchMenuForRestaurant } from "./Chef/api-MenuMnagement";
 import Cookies from "js-cookie";
@@ -24,6 +24,7 @@ const BookingPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [FullDialog, setFullDialog] = useState(false);
+  const [restName, setRestName] = useState('');
   const [bookingDetails, setBookingDetails] = useState({
     date: "",
     time: "",
@@ -31,7 +32,32 @@ const BookingPage = () => {
     menuSelection: [],
   });
 
+   const controller = new AbortController();
+    const signal = controller.signal;
+
+  const fetchRestName = async () =>{
+      try{
+         
+          const credentials = {
+            t: Cookies.get("accessToken"),
+          };
+          const id = {_id: restaurantId};
+
+          const response = await read(id, credentials, signal );
+          console.log(response);
+
+          setRestName(response.name);
+          
+      }catch(e){
+        console.log(`error to fetch restaurant name  ${e}`);
+      }
+    }
+
   useEffect(() => {
+    if(restaurantId){
+      fetchRestName();
+    }
+
     const fetchMenu = async () => {
       try {
         const credentials = {
@@ -48,6 +74,8 @@ const BookingPage = () => {
     };
 
     fetchMenu();
+
+    return () => controller.abort();
   }, [restaurantId]);
 
   const handleInputChange = (e) => {
@@ -55,12 +83,14 @@ const BookingPage = () => {
     setBookingDetails({ ...bookingDetails, [name]: value });
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const credentials = {
       t: Cookies.get("accessToken"),
     };
     const restaurantData = await read({ _id: restaurantId }, credentials);
+    
     const Reservation = {
       restaurantId: restaurantId,
       restaurantName: restaurantData.name,
@@ -85,6 +115,7 @@ const BookingPage = () => {
         setOpenDialog(true);
         setFullDialog(false);
         emailSend(Email);
+        
       } else {
         setBookingDetails({
           ...bookingDetails,
@@ -98,7 +129,7 @@ const BookingPage = () => {
   };
 
   const emailSend = async (Email) => {
-    emailConfirm(Email)
+    emailCreateConfirm(Email)
       .then((data) => {
         console.log(Email);
         console.log(data);
@@ -110,10 +141,24 @@ const BookingPage = () => {
 
   const handleClose = () => {
     setOpenDialog(false);
+    setBookingDetails({
+          date: "",
+          time: "",
+          people: "",
+          menuSelection: [],
+        });
+    
   };
 
   const handleFullClose = () => {
     setFullDialog(false);
+    setBookingDetails({
+          date: "",
+          time: "",
+          people: "",
+          menuSelection: [],
+        });
+    
   };
 
   const handleMenuChange = (event) => {
@@ -203,7 +248,7 @@ const BookingPage = () => {
         <DialogTitle>Booking Successful</DialogTitle>
         <DialogContent>
           You have reserved a table on {bookingDetails.date} at{" "}
-          {bookingDetails.time} successfully.
+          {bookingDetails.time} at {restName} successfully.
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

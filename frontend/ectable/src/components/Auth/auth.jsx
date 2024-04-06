@@ -2,10 +2,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-
+import { useNavigate } from "react-router";
+import {useLocationContext} from "../../components/Location/locationTrack"
 const AuthContext = createContext();
 export const UseAuth = () => useContext(AuthContext);
 
+  
 const fetchUserType = async (userID) => {
   try {
     const response = await fetch(`http://localhost:5500/User/${userID}`);
@@ -46,6 +48,8 @@ const fetchRestId = async(query) =>{
       console.log(`error occur in fetch restaurant id- ${err}`)
     }
 }
+
+
 
 // const fetchRestIdByChefID = async (userID) =>{
 //   try {
@@ -102,7 +106,32 @@ export const AuthProvider = ({children}) =>{
   const [userType, setUserType] = useState('');
   const [restIDs, setRestIDs] = useState('');
   const [userIDs, setUserIDs] = useState('');
+
+  const {locations} = useLocationContext();
+ 
+  const navigate = useNavigate();
+  // const location = useLocation();
+  const from = locations || Cookies.get('prevPath') || "/";
+  // console.log(`location : ${location}`);
+  console.log(from)
+  console.log(`location state : ${locations.state}`);
+
+
+  async function checklocation() {
     
+    console.log(from);
+    // if (from) {
+    //   url = from; // Redirect to Booking Page with restaurantId
+    //   console.log(url);
+      
+    // } else {
+    //   url = "/"; // Or redirect to another default page
+    //   console.log(url);
+    // }
+    const url = from || "/";
+    navigate(url);
+  }
+ 
   // useEffect(() => {
   //   const checkLoginStatus = () => {
       
@@ -113,9 +142,22 @@ export const AuthProvider = ({children}) =>{
 
   //   checkLoginStatus();
   // }, []);
+  useEffect(() =>{
+      
+    const token = Cookies.get("accessToken");
+    setIsLoggedIn(!!token);
+    checklocation();
+      
+  },[])
+
 
    useEffect(() => {
+    
+    
     const fetchData = async () =>{
+      
+       
+      
       if(isLoggedIn){
         const userID = Cookies.get("userId");
         console.log(`user ID : ${userID}`)
@@ -171,8 +213,10 @@ export const AuthProvider = ({children}) =>{
   //     console.log('user type error');
   //   }
   // }
-
-  fetchData();
+  if(isLoggedIn){
+    fetchData();
+  }
+  
 }, [isLoggedIn]);
 
   // useEffect(() => {

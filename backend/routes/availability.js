@@ -1,16 +1,10 @@
 const express = require("express");
 
-// recordRoutes is an instance of the express router.
-// We use it to define our routes.
-// The router will be added as a middleware and will take control of requests starting with path /record.
 const availabilityRoutes = express.Router();
 
-// This will help us connect to the database
 const dbo = require("../db/conn");
 
-// This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
-
 
 availabilityRoutes.route("/Restaurants/:id/availability").post(async (req, res) => {
   const db_connect = dbo.getDb("availabilities");
@@ -41,7 +35,6 @@ availabilityRoutes.route("/Restaurants/:id/availability").post(async (req, res) 
                     data: info
                 });
                 console.log(result);
-                // console.log(info)
             })
             .catch((err) => {
                 res.status(500).json({
@@ -66,7 +59,6 @@ availabilityRoutes.route("/Restaurants/:id/availability").post(async (req, res) 
                     data: info
                 });
                 console.log(result);
-                // console.log(info)
             })
             .catch((err) => {
                 res.status(500).json({

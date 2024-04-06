@@ -1,5 +1,3 @@
-
-
 const create = async (Restaurant) => {
   try {
     console.log(JSON.stringify(Restaurant));
@@ -16,6 +14,7 @@ const create = async (Restaurant) => {
     console.log(err);
   }
 };
+
 const list = async (signal) => {
   try {
     let response = await fetch("http://localhost:5500/restaurants/", {
@@ -86,4 +85,22 @@ const remove = async (params, credentials) => {
     console.log(err);
   }
 };
-export { create, list, read, update, remove };
+
+const fetchMyRestaurants = async (credentials, signal) => {
+  try {
+    let response = await fetch("http://localhost:5500/MyRestaurants/", {
+      method: "GET",
+      signal: signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: credentials.t,
+      },
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { create, list, read, update, remove, fetchMyRestaurants};

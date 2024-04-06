@@ -1,14 +1,9 @@
 const express = require("express");
 
-// recordRoutes is an instance of the express router.
-// We use it to define our routes.
-// The router will be added as a middleware and will take control of requests starting with path /record.
 const UserRoutes = express.Router();
 
-// This will help us connect to the database
 const dbo = require("../db/conn");
 
-// This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
 const authToken = require("../Auth/token");
@@ -67,6 +62,21 @@ UserRoutes.route("/User/:id").get(async (req, res) => {
   }
 });
 
+UserRoutes.route("/User/Email/:id").get(async (req, res) => {
+  const db_connect = dbo.getDb();
+  console.log(req.body);
+    let myquery = { _id: new ObjectId(req.params.dinerId) };
+  const data = await db_connect.collection("User").find(myquery);
+
+  if (data) {
+    console.log(data);
+    console.log(myquery._id);
+    res.json(data);
+  } else {
+    console.log("Email data is not found");
+  }
+});
+
 UserRoutes.route("/User/:id/update").post(async (req, response) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
@@ -96,8 +106,5 @@ UserRoutes.route("/User/:id/update").post(async (req, response) => {
     });
 });
 
-// UserRoutes.get('/user/:id/protected', authToken, (req,res)=>{
-//   res.json({ message: "This is a protected route" });
-// })
 
 module.exports = UserRoutes;

@@ -2,8 +2,6 @@ const express = require("express");
 const dbo = require("../db/conn");
 const login = express.Router();
 const jwt = require("jsonwebtoken");
-// console.log(__dirname)
-// console.log(process.env.ACCESS_TOKEN_SECRET)
 require("dotenv").config({ path: "./token.env" });
 const ObjectId = require("mongodb").ObjectId;
 
@@ -13,14 +11,9 @@ login.post("/diner/login", async (req, res) => {
     const dinerPwd = req.body.password;
     const db = dbo.getDb();
 
-    // const salt = await bcrypt.genSalt();
-    // const hashedPassword = await bcrypt.hash(dinerPwd,salt);
-
     const check = await db
       .collection("User")
       .findOne({ email: dinerEmail, password: dinerPwd });
-
-    // console.log(check._id);
 
     if (check) {
       console.log("Login Successful!");
@@ -50,7 +43,5 @@ login.post("/diner/login", async (req, res) => {
     console.error(e);
   }
 });
-
-// module.exports = {login, authToken};
 
 module.exports = login;

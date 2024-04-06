@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { getRestaurantById } from "../Restaurants/api-restaurant";
 
 const createMenu = async (menu) => {
   try {
@@ -63,7 +62,6 @@ const updateMenu = async (menu) => {
     console.log(err);
   }
 };
-
 const removeMenu = async (menu) => {
   
     axios.delete(`http://localhost:5500/Menu/delete`,{
@@ -78,9 +76,5 @@ const removeMenu = async (menu) => {
       console.error(err)
     })
 };
-
-
-
-
 
 export {createMenu, readMenu, readRestId, updateMenu, removeMenu};

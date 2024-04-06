@@ -1,23 +1,15 @@
 const express = require("express");
 
-// recordRoutes is an instance of the express router.
-// We use it to define our routes.
-// The router will be added as a middleware and will take control of requests starting with path /record.
 const ReservationRoutes = express.Router();
 
-// This will help us connect to the database
 const dbo = require("../db/conn");
 
-// This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
 const authToken = require("../Auth/token");
 
 const{updateRestaurantAvailability} = require('../Controller/restaurantController')
 
-
-// This section will help you get a list of all the records.
-// get all restaurants
 ReservationRoutes.route("/Reservation").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
@@ -29,7 +21,6 @@ ReservationRoutes.route("/Reservation").get(async function (req, response) {
   }
 });
 
-//register new restaurant
 ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
   const db_connect = dbo.getDb();
   console.log(req.body.restaurantId);
@@ -46,23 +37,14 @@ ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
 
   const peopleRequesting = parseInt(req.body.people);
 
-  // const check = await db_connect
-  //   .collection("Reservation")
-  //   .findOne({ restaurantId: Reservation.restaurantId, dinerId : Reservation.dinerId, date: Reservation.date, time: Reservation.time });
-
-  //   .insertOne(Reservation);
     try{
           const query = {_id : new ObjectId(req.body.restaurantId)};
           const check = await db_connect.collection("Restaurants").findOne(query, {projection: { "availability": 1, "_id": 0 } });
       
           const customQuery = {restaurantId : Reservation.restaurantId, date:Reservation.date, time:Reservation.time};
           const customAvailability = await db_connect.collection("availabilities").findOne(customQuery);
-          
-            // const bookingquery = { restaurantId : new ObjectId(req.body.restaurantId), date : req.body.date, time: req.body.time }
-            // const booking = await db_connect.collection("Reservation").find(bookingquery);
-            // console.log(booking);
 
-            const totalAvailability = customAvailability? customAvailability.availability : check.availability;
+          const totalAvailability = customAvailability? customAvailability.availability : check.availability;
 
             console.log(req.body.date)
             console.log(req.body.time)
@@ -78,7 +60,7 @@ ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
             const bookingAggregation = await db_connect.collection("Reservation").aggregate([
               {
                 $match: {
-                  restaurantId: req.body.restaurantId, // Ensure this matches your schema's data type
+                  restaurantId: req.body.restaurantId,
                   date: req.body.date,
                   time: req.body.time
                 }
@@ -119,40 +101,8 @@ ReservationRoutes.route("/Reservation/register").post(async (req, res) => {
       }catch(err){
         console.error("Error processing reservation:", err);
         res.status(400).json({ success: false, message:"Insufficient availability for the requested booking", remain : remainingAvailability, total : totalBooked});}
-
-    //     if(check){
-    //       console.log("Availability : " + check.availability)
-    //         if (Reservation.people <= check.availability) {
-    //             await db_connect.collection("Reservation").insertOne(Reservation).then((result) => {
-    //             console.log(result);
-    //             res.json(result);})
-    //            .catch((err) => console.error(err))}
-    //             await updateRestaurantAvailability(req.body.restaurantId, Reservation.people);
-    //             res.json({ message: "Reservation successful and availability updated" });
-    //         }else{ console.log("availiablity not found.")}
-    //         console.log(Reservation);
-
-    //   }catch(err){
-    //   console.error("Error processing reservation:", err);
-    //   res.status(500).json({ error: "An error occurred processing the reservation" });
-    // }
-
-
-   
-      
-  // if (!check) {
-  //   db_connect
-  //     .collection("Reservation")
-  //     .insertOne(Reservation)
-  //     .then((result) => {
-  //       console.log(result);
-  //       res.json(result);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }
 });
 
-// This section will help you get a single record by id
 ReservationRoutes.route("/Reservation/:id").get(authToken, async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
@@ -167,21 +117,6 @@ ReservationRoutes.route("/Reservation/:id").get(authToken, async (req, res) => {
   }
 });
 
-// // This section will help you create a new record.
-// restaurantRoutes.route("/record/add").post(function (req, response) {
-//  let db_connect = dbo.getDb();
-//  let myobj = {
-//    name: req.body.name,
-//    position: req.body.position,
-//    level: req.body.level,
-//  };
-//  db_connect.collection("records").insertOne(myobj, function (err, res) {
-//    if (err) throw err;
-//    response.json(res);
-//  });
-// });
-
-// This section will help you update a record by id.
 ReservationRoutes.route("/Reservation/:id/update").put(async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
@@ -219,7 +154,6 @@ ReservationRoutes.route("/Reservation/:id/update").put(async (req, res) => {
   }
 });
 
-// This section will help you delete a record
 ReservationRoutes.route("/Reservation/:id/delete").delete(async (req, res) => {
   let db_connect = dbo.getDb();
   let myquery = { _id: new ObjectId(req.params.id) };
@@ -231,8 +165,6 @@ ReservationRoutes.route("/Reservation/:id/delete").delete(async (req, res) => {
       console.log("Deleted");
     });
 });
-
-// This section will help you find the booking
 
 ReservationRoutes.route("/Reservation/find").get(
   authToken,
@@ -254,7 +186,6 @@ ReservationRoutes.route("/Reservation/find").get(
       });
 
       if (reservation) {
-        // Returning the relevant reservation details
         const { date, time, people, menuSelection } = reservation;
         res.json({ date, time, people, menuSelection });
       } else {
@@ -270,21 +201,20 @@ ReservationRoutes.route("/Reservation/find").get(
 );
 
 ReservationRoutes.route("/Reservation/User/:userId").get(async (req, res) => {
-  const db_connect = dbo.getDb("Reservation"); // Make sure to specify your database name if needed
-  const userId = req.params.userId; // Assuming userId is a string
+  const db_connect = dbo.getDb("Reservation"); 
+  const userId = req.params.userId; 
 
-  // Query based on the userId field
   const query = { dinerId: userId };
 
   try {
     const data = await db_connect
       .collection("Reservation")
       .find(query)
-      .toArray(); // Using .find() to get all matches
+      .toArray(); 
 
     if (data && data.length > 0) {
       console.log(data);
-      res.json(data); // Respond with an array of reservations
+      res.json(data); 
     } else {
       console.log("No data found for this user");
       res.status(404).json({ message: "No reservations found for this user." });
@@ -299,13 +229,11 @@ ReservationRoutes.route("/Reservation/Admin/:adminId").get(async (req, res) => {
   const db_connect = dbo.getDb("Restaurant");
   const adminId = req.params.adminId;
 
-  // Validate adminId as a valid ObjectId
   if (!ObjectId.isValid(adminId)) {
     return res.status(400).json({ message: "Invalid adminId." });
   }
 
   try {
-    // Step 1: Find all restaurant documents based on adminId
     const restaurants = await db_connect
       .collection("Restaurants")
       .find({ adminId: adminId })
@@ -325,7 +253,7 @@ ReservationRoutes.route("/Reservation/Admin/:adminId").get(async (req, res) => {
     );
     console.log("Restaurant IDS");
     console.log(restaurantIds);
-    // Step 2: Find reservations associated with each restaurant's _id
+ 
     const reservations = await db_connect
       .collection("Reservation")
       .find({ restaurantId: { $in: restaurantIds } })
@@ -333,7 +261,7 @@ ReservationRoutes.route("/Reservation/Admin/:adminId").get(async (req, res) => {
 
     if (reservations.length > 0) {
       console.log("Reservations found:", reservations);
-      res.json(reservations); // Respond with an array of reservations
+      res.json(reservations);
     } else {
       console.log("No reservations found for these restaurants");
       res
@@ -351,13 +279,11 @@ ReservationRoutes.route("/Reservation/readonly/:readonlyId").get(
     const db_connect = dbo.getDb("Restaurant");
     const readonlyId = req.params.readonlyId;
 
-    // Validate readonlyId as a valid ObjectId
     if (!ObjectId.isValid(readonlyId)) {
       return res.status(400).json({ message: "Invalid readonlyId." });
     }
 
     try {
-      // Step 1: Find all restaurant documents based on adminId
       const restaurants = await db_connect
         .collection("Restaurants")
         .find({ readonlyId: readonlyId })
@@ -377,7 +303,7 @@ ReservationRoutes.route("/Reservation/readonly/:readonlyId").get(
       );
       console.log("Restaurant IDS");
       console.log(restaurantIds);
-      // Step 2: Find reservations associated with each restaurant's _id
+
       const reservations = await db_connect
         .collection("Reservation")
         .find({ restaurantId: { $in: restaurantIds } })
@@ -385,7 +311,7 @@ ReservationRoutes.route("/Reservation/readonly/:readonlyId").get(
 
       if (reservations.length > 0) {
         console.log("Reservations found:", reservations);
-        res.json(reservations); // Respond with an array of reservations
+        res.json(reservations); 
       } else {
         console.log("No reservations found for these restaurants");
         res
