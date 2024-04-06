@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite & tailwindcss -w -o ./src/styles/tailwind.css",
-    "build": "webpack -w",
+    "build": "vite build",
     "build:prod": "webpack -p",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
