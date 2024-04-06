@@ -1,6 +1,4 @@
-import React from "react";
 import aboutImg from "../../assets/images/aboutImg.jpg";
-//import aboutCardImg from "../../assets/images/aboutCardImg.png";
 
 const About = () => {
   return (
@@ -22,7 +20,6 @@ const About = () => {
             <img src={aboutImg} alt="aboutImg" />
           </div>
 
-          {/*==== about content --*/}
         </div>
       </div>
     </section>

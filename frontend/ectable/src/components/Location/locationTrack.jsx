@@ -16,5 +16,5 @@ export const LocationProvider = ({ children }) => {
 };
 
 LocationProvider.propTypes = {
-  children: PropTypes.node.isRequired, // Indicates that children must be a React node and is required
+  children: PropTypes.node.isRequired
 };

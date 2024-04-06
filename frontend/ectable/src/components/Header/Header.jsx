@@ -1,12 +1,8 @@
-// import { useState, useEffect } from "react";
-
 import logo from "../../assets/images/logo.png";
 import { NavLink, Link } from "react-router-dom";
 import { BiMenu } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-// import { authLogout } from "../Auth/auth";
 import { UseAuth } from "../Auth/auth";
-// import Cookies from "js-cookie";
 
 const NavLinks = [
   {
@@ -22,64 +18,26 @@ const NavLinks = [
     display: "Signup",
   },
 ];
-// const getCookieValue = (name) => {
-//   const matches = document.cookie.match(
-//     "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"
-//   );
-//   return matches ? decodeURIComponent(matches[2]) : null;
-// };
-
-// const fetchUserType = async (userID) => {
-//   try {
-//     const response = await fetch(`http://localhost:5500/User/${userID}`);
-//     if (!response.ok) throw new Error("Network response was not OK");
-//     const data = await response.json();
-//     console.log('data');
-//     console.log(data);
-//     return data.type; // Assuming the API returns a JSON object with a 'type' field
-//   } catch (error) {
-//     console.error("Error fetching user details:", error);
-//     return null; // Handle error appropriately or return null
-//   }
-// };
 
 const Header = () => {
   const navigate = useNavigate();
   const {isLoggedIn, userType, userIDs,restIDs, authLogout} = UseAuth();
-  // const restID = Cookies.get("restID");
   console.log(restIDs);
-
-  // const [userType, setUserType] = useState("");
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // useEffect(() => {
-  //   const userID = getCookieValue("userId"); // Use the correct cookie name here
-  //   if (userID) {
-  //     setIsLoggedIn(true);
-  //     fetchUserType(userID).then((type) => {
-  //       setUserType(type);
-  //     });
-  //   } else {
-  //     setIsLoggedIn(false);
-  //     setUserType("");
-  //   }
-  // }, []);
 
   const logout = () => {
     authLogout();
     console.log("Logged out!");
-    navigate("/login"); // Navigate to home page or login page as per requirement after logout
+    navigate("/login");
   };
 
   return (
     <header className="header flex items-center">
       <div className="container flex items-center justify-between w-full">
-        {/*====logo *=====*/}
+        
         <div>
           <img src={logo} alt="logo" />
         </div>
 
-        {/**========Menu */}
         <div className="navigation">
           <ul className="menu flex items-center gap-[2.7rem]">
             {NavLinks.map((item, index) => (
@@ -99,7 +57,6 @@ const Header = () => {
           </ul>
         </div>
 
-        {/*==== Nav Right ====*/}
         <div className="flex items-center gap-4">
           <div className="hidden">
             <Link to="/">
@@ -121,7 +78,7 @@ const Header = () => {
             </Link>
           )}
           <div className="container flex items-center justify-between w-full">
-            {/* Other header content */}
+
             <div className="flex-grow" />
             <div className="flex gap-x-4">
                 {isLoggedIn && (
@@ -132,7 +89,7 @@ const Header = () => {
                   Logout
                 </button>
                 )}
-              {/* Additional button for Admin */}
+
               {(userType === "Admin" || userType === "chef") && (
                 <button
                   onClick={() => navigate(`/Menu/Restaurant/${restIDs}`)}
@@ -150,7 +107,7 @@ const Header = () => {
                   Admin Page
                 </button>
               )}
-              {/* Additional button for Diner */}
+
               {userType === "Diner" && (
                 <button
                   onClick={() => navigate(`/BookingManagement/${userIDs}`)}
@@ -167,7 +124,7 @@ const Header = () => {
                   View Booking
                 </button>
               )}
-              {/* More elements like logout button, etc. */}
+
             </div>
           
           </div>

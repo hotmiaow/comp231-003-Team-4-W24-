@@ -1,5 +1,3 @@
-//ReservationRoutes.route("/Reservation/readonly/:readonlyId").get(
-
 const fetchReadonlyReservations = async (params, credentials, signal) => {
   try {
     let response = await fetch(

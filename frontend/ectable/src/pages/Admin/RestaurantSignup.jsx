@@ -32,7 +32,7 @@ const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
-  return null; // Return null if cookie is not found
+  return null;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -59,14 +59,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
   },
   selectedImageClass: {
-    border: "5px solid #ff51b5", // Example border color, adjust as needed
-    borderRadius: theme.shape.borderRadius, // Optional, for rounded corners
+    border: "5px solid #ff51b5", 
+    borderRadius: theme.shape.borderRadius, 
   },
 }));
-
-// const create = async (user) => {
-//   return { error: null }; // Simulated API call
-// };
 
 export default function RestaurantSignup() {
   const { default_admin_email } = useParams();
@@ -89,8 +85,8 @@ export default function RestaurantSignup() {
     selectedImage: "",
     readonlyPassword: "",
     availability: "",
-    registerReadOnly: false, // New state value for checkbox
-    registerChef: false, // New state value for registering chef
+    registerReadOnly: false,
+    registerChef: false
   });
 
   const handleCheckboxChange = (event) => {
@@ -125,7 +121,6 @@ export default function RestaurantSignup() {
 
   const handleChange = (name) => (event) => {
     if (name === "photo" && event.target.files) {
-      // Store the file object in the state
       setValues({ ...values, [name]: event.target.files[0] });
     } else {
       setValues({ ...values, [name]: event.target.value });
@@ -139,7 +134,6 @@ export default function RestaurantSignup() {
   const adminId = getCookie("userId");
 
   const clickSubmit = async () => {
-    // Make the function async
     const restaurant = {
       email: values.email || undefined,
       name: values.name || undefined,
@@ -179,7 +173,6 @@ export default function RestaurantSignup() {
           var updatedRestaurant = { ...restaurant, readOnlyId: readOnlyId };
 
           if (values.registerChef) {
-            // If registering chef, create the chef user next
             const chefUser = {
               email: values.chefEmail || undefined,
               password: values.chefPassword || undefined,
@@ -199,16 +192,13 @@ export default function RestaurantSignup() {
             }
           }
           console.log("updated " + updatedRestaurant);
-          // Proceed to create the restaurant with the updated information
           await createRestaurant(updatedRestaurant);
         }
       } catch (error) {
         console.error("Error creating read-only user:", error);
       }
     } else {
-      // If not registering a read-only account, proceed with chef registration if needed
       if (values.registerChef) {
-        // If registering chef, create the chef user first
         const chefUser = {
           email: values.chefEmail || undefined,
           password: values.chefPassword || undefined,
@@ -239,18 +229,14 @@ export default function RestaurantSignup() {
 
   const createRestaurant = async (restaurant) => {
     try {
-      const data = await create(restaurant); // Assume create is your function to create a restaurant
+      const data = await create(restaurant); 
       if (data.error) {
-        // Handle error if restaurant creation failed
         setValues({ ...values, error: data.error });
       } else {
         setOpen(true);
-        // Handle successful restaurant creation (e.g., show a success message, navigate to another page)
       }
     } catch (error) {
-      // Handle any errors that occurred during the restaurant creation call
       console.error("Error creating restaurant:", error);
-      // Optionally update state to reflect the error
     }
   };
   const handleImageSelection = (imageName) => {
@@ -397,7 +383,6 @@ export default function RestaurantSignup() {
             }
             label="Register Chef Account"
           />
-          {/* Conditionally render the read-only email and password fields based on the checkbox */}
           {values.registerReadOnly && (
             <>
               <TextField
