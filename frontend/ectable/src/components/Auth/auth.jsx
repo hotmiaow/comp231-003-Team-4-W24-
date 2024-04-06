@@ -10,7 +10,7 @@ export const UseAuth = () => useContext(AuthContext);
   
 const fetchUserType = async (userID) => {
   try {
-    const response = await fetch(`http://localhost:5500/User/${userID}`);
+    const response = await fetch(`https://ectable.onrender.com:5500/User/${userID}`);
     if (!response.ok) throw new Error("Network response was not OK");
     const data = await response.json();
     console.log('data');
@@ -24,7 +24,7 @@ const fetchUserType = async (userID) => {
 
 const fetchRestId = async(query) =>{
     
-    const api = `http://localhost:5500/restaurants/chef`;
+    const api = `https://ectable.onrender.com:5500/restaurants/chef`;
 
     try{
       const response = await axios.post(api, query,{
@@ -120,7 +120,7 @@ export const AuthProvider = ({children}) =>{
     const authLogin = async (email, password, url) => {
 
     try {
-      const response = await axios.post("http://localhost:5500/diner/login", {
+      const response = await axios.post("https://ectable.onrender.com:5500/diner/login", {
         email: email,
         password: password,
       });

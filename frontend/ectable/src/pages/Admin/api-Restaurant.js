@@ -1,7 +1,7 @@
 const create = async (Restaurant) => {
   try {
     console.log(JSON.stringify(Restaurant));
-    let response = await fetch("https://ectable.onrender.com/Restaurants/register", {
+    let response = await fetch("https://ectable.onrender.com:5500/Restaurants/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -28,7 +28,7 @@ const list = async (signal) => {
 };
 const read = async (params, credentials, signal) => {
   try {
-    let response = await fetch(`https://ectable.onrender.com/Restaurants/${params}`, {
+    let response = await fetch(`https://ectable.onrender.com:5500/Restaurants/${params}`, {
       method: "GET",
       signal: signal,
       headers: {

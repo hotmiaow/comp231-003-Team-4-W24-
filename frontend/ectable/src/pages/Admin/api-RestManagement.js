@@ -1,7 +1,7 @@
 const create = async (Reservation) => {
   try {
     console.log(JSON.stringify(Reservation));
-    let response = await fetch("https://ectable.onrender.com/Reservation/register", {
+    let response = await fetch("https://ectable.onrender.com:5500/Reservation/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -18,7 +18,7 @@ const create = async (Reservation) => {
 const read = async (params, credentials, signal) => {
   try {
     let response = await fetch(
-      "https://ectable.onrender.com/Reservation/" + params.id,
+      "https://ectable.onrender.com:5500/Reservation/" + params.id,
       {
         method: "GET",
         signal: signal,
@@ -36,7 +36,7 @@ const read = async (params, credentials, signal) => {
 };
 const update = async (params, credentials, user) => {
   try {
-    let response = await fetch("https://ectable.onrender.com/Reservation/" + params.userId, {
+    let response = await fetch("https://ectable.onrender.com:5500/Reservation/" + params.userId, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -53,7 +53,7 @@ const update = async (params, credentials, user) => {
 
 const remove = async (params, credentials) => {
   try {
-    let response = await fetch("https://ectable.onrender.com/Reservation/" + params.userId, {
+    let response = await fetch("https://ectable.onrender.com:5500/Reservation/" + params.userId, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -68,7 +68,7 @@ const remove = async (params, credentials) => {
 };
 const find = async (params, credentials, signal) => {
   try {
-    let response = await fetch("https://ectable.onrender.com/Reservation/find", {
+    let response = await fetch("https://ectable.onrender.com:5500/Reservation/find", {
       method: "GET",
       signal: signal,
       headers: {
@@ -85,7 +85,7 @@ const find = async (params, credentials, signal) => {
 const readUserId = async (params, credentials, signal) => {
   try {
     let response = await fetch(
-      "https://ectable.onrender.com/Reservation/User/" + params.userId,
+      "https://ectable.onrender.com:5500/Reservation/User/" + params.userId,
       {
         method: "GET",
         signal: signal,
@@ -105,7 +105,7 @@ const readUserId = async (params, credentials, signal) => {
 const fetchReservations = async (params, credentials, signal) => {
   try {
     let response = await fetch(
-      `https://ectable.onrender.com/Reservation/Admin/${params.userId}`,
+      `https://ectable.onrender.com:5500/Reservation/Admin/${params.userId}`,
       {
         method: "GET",
         signal: signal,

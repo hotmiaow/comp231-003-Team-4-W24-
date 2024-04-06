@@ -3,7 +3,7 @@ import axios from "axios";
 const createMenu = async (menu) => {
   try {
     console.log(menu);
-    let response = await axios.post(`https://ectable.onrender.com/Menu/register`, menu, {
+    let response = await axios.post(`https://ectable.onrender.com:5500/Menu/register`, menu, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ const createMenu = async (menu) => {
 
 const readMenu = async (restId) => {
   try {
-    let response = await axios.get(`https://ectable.onrender.com/Menu/Restaurant/${restId}`, {
+    let response = await axios.get(`https://ectable.onrender.com:5500/Menu/Restaurant/${restId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const readMenu = async (restId) => {
 
 const readRestId = async (restId) => {
   try {
-    let response = await axios.get(`https://ectable.onrender.com/Restaurant/${restId}`, {
+    let response = await axios.get(`https://ectable.onrender.com:5500/Restaurant/${restId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const updateMenu = async (menu) => {
     console.log(menu);
     console.log(menu.restaurantId);
     
-    const path = `https://ectable.onrender.com/Menu/${menu.restaurantId}/update`;
+    const path = `https://ectable.onrender.com:5500/Menu/${menu.restaurantId}/update`;
     console.log(path)
     
     let response = await axios.put(path, menu, {
@@ -64,7 +64,7 @@ const updateMenu = async (menu) => {
 };
 const removeMenu = async (menu) => {
   
-    axios.delete(`https://ectable.onrender.com/Menu/delete`,{
+    axios.delete(`https://ectable.onrender.com:5500/Menu/delete`,{
       data:menu,
       headers: {
         Accept: "application/json",

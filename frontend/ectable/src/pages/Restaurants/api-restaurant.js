@@ -1,7 +1,7 @@
 const create = async (Restaurant) => {
   try {
     console.log(JSON.stringify(Restaurant));
-    let response = await fetch("https://ectable.onrender.com/restaurants/register", {
+    let response = await fetch("https://ectable.onrender.com:5500/restaurants/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -17,7 +17,7 @@ const create = async (Restaurant) => {
 
 const list = async (signal) => {
   try {
-    let response = await fetch("https://ectable.onrender.com/restaurants/", {
+    let response = await fetch("https://ectable.onrender.com:5500/restaurants/", {
       method: "GET",
       signal: signal,
       credentials: 'include'
@@ -32,7 +32,7 @@ const read = async (params, credentials, signal) => {
     console.log(credentials.t);
     console.log(params._id);
     let response = await fetch(
-      `https://ectable.onrender.com/restaurants/${params._id}`,
+      `https://ectable.onrender.com:5500/restaurants/${params._id}`,
       {
         method: "GET",
         signal: signal,
@@ -51,7 +51,7 @@ const read = async (params, credentials, signal) => {
 const update = async (params, credentials, user) => {
   try {
     let response = await fetch(
-      "https://ectable.onrender.com/restaurants/" + params.userId,
+      "https://ectable.onrender.com:5500/restaurants/" + params.userId,
       {
         method: "PUT",
         headers: {
@@ -70,7 +70,7 @@ const update = async (params, credentials, user) => {
 const remove = async (params, credentials) => {
   try {
     let response = await fetch(
-      "https://ectable.onrender.com/restaurants/" + params.userId,
+      "https://ectable.onrender.com:5500/restaurants/" + params.userId,
       {
         method: "DELETE",
         headers: {
@@ -88,7 +88,7 @@ const remove = async (params, credentials) => {
 
 const fetchMyRestaurants = async (credentials, signal) => {
   try {
-    let response = await fetch("https://ectable.onrender.com/MyRestaurants/", {
+    let response = await fetch("https://ectable.onrender.com:5500/MyRestaurants/", {
       method: "GET",
       signal: signal,
       headers: {
