@@ -22,16 +22,21 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+ 
+
 function Menu() {
   const restID = Cookies.get("restID");
   console.log(`Rest ID: ${restID}`);
   const { restaurantId } = useParams();
   const [menuItems, setMenuItems] = useState([]);
 
+
    const [newMenuItem, setNewMenuItem] = useState({ name: '', description: '', price: '' });
    const [isDeleted, setIsDeleted] = useState(false);
    const [isUpdated, setIsUpdated] = useState(false);
    const [open, setOpen] = useState(false);
+
+ 
 
   const fetchMenu = async () => {
         try {
@@ -121,7 +126,6 @@ function Menu() {
       };
 
   const handleSave = async () => {
-      // Implement update method
       console.log(newMenuItem.name);
       console.log(newMenuItem.description);
       console.log(newMenuItem.price);
@@ -149,7 +153,6 @@ function Menu() {
         else{
           console.log('update successful', response)
           setIsUpdated(true);
-          editMenus(response.data);
           setNewMenuItem({ name: '', description: '', price: '' });
         }
       }

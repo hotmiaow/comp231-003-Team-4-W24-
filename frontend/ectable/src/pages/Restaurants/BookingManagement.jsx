@@ -122,7 +122,7 @@ function BookingManagement() {
       handleClose();
     }
 
-    const handleSave = async (reservation) => {
+    const handleSave = async () => {
       console.log(selectedReservation.date);
       console.log(selectedReservation.time);
       console.log(selectedReservation.people);

@@ -1,7 +1,7 @@
 const fetchMenuForRestaurant = async (params, credentials, signal) => {
   try {
     let response = await fetch(
-      `http://localhost:5500/Menu/Restaurant/${params.restaurantId}`,
+      `https://ectable.onrender.com/Menu/Restaurant/${params.restaurantId}`,
       {
         method: "GET",
         signal: signal,
