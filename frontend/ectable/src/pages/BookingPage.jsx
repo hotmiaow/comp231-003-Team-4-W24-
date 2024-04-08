@@ -13,6 +13,9 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
@@ -27,6 +30,7 @@ const BookingPage = () => {
   const { restaurantId } = useParams();
   const [openDialog, setOpenDialog] = useState(false);
   const [FullDialog, setFullDialog] = useState(false);
+  const [dialogImage, setDialogImage] = useState("");
 
   const [bookingDetails, setBookingDetails] = useState({
     date: "",
@@ -124,9 +128,48 @@ const handleSubmit = async (e) => {
     setFullDialog(false);
   }
 
+  const handleDialogOpen = (image) => {
+    setDialogImage(image);
+    setOpenDialog(true);
+  };
+
   const menuItems = [
-    { name: "Steak", price: 20 },
-    { name: "Salmon", price: 18 },
+    { 
+      name: "Steak", 
+      price: 20, 
+      image: "../../images/steak.jpg", 
+      description: "Juicy beef steak cooked to perfection, served with a side of vegetables and mashed potatoes." 
+    },
+    { 
+      name: "Salmon", 
+      price: 18, 
+      image: "../../images/salmon.jpg", 
+      description: "Fresh Atlantic salmon fillet grilled and seasoned with herbs, served with steamed rice and lemon wedges." 
+    },
+    { 
+      name: "Burger", 
+      price: 15, 
+      image: "../../images/burger.jpg", 
+      description: "Classic beef burger with lettuce, tomato, onion, pickles, and your choice of cheese, served with fries." 
+    },
+    { 
+      name: "Pizza", 
+      price: 23, 
+      image: "../../images/pizza.jpg", 
+      description: "Hand-tossed pizza with your choice of toppings, baked to perfection in a wood-fired oven." 
+    },
+    { 
+      name: "Pancake", 
+      price: 12, 
+      image: "../../images/pancake.jpg", 
+      description: "Fluffy pancakes served with maple syrup, whipped cream, and a side of fresh fruits." 
+    },
+    { 
+      name: "Croissant", 
+      price: 10, 
+      image: "../../images/croissant.jpg", 
+      description: "Buttery and flaky croissant, perfect for breakfast or as a light snack." 
+    },
     // Add more menu items
   ];
 
@@ -242,13 +285,38 @@ const handleSubmit = async (e) => {
       <FormControl component="fieldset">
         <Typography variant="h6">Select Menu Items</Typography>
         {menuItems.map((item) => (
-          <FormControlLabel
-            control={<Checkbox onChange={handleMenuChange} name={item.name} />}
-            label={`${item.name} - $${item.price}`}
-            key={item.name}
-          />
+          <Card key={item.name} style={{ display: 'flex', marginBottom: '10px' }}>
+            <CardContent style={{ flex: 1 }}>
+              <FormControlLabel
+                control={<Checkbox onChange={handleMenuChange} name={item.name} />}
+                label={`${item.name} - $${item.price}`}
+              />
+              <Typography>{item.description}</Typography>
+            </CardContent>
+            <CardMedia
+              style={{ width: '100px' }}
+              image={item.image}
+              title={item.name}
+              onClick={() => handleDialogOpen(item.image)}
+            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button onClick={() => handleDialogOpen(item.image)} color="primary">View Image</Button>
+            </div>
+          </Card>
         ))}
       </FormControl>
+
+      <Dialog open={openDialog} onClose={handleClose} maxWidth="md">
+        <DialogTitle>Image</DialogTitle>
+        <DialogContent>
+          <img src={dialogImage} alt="Menu Item" style={{ width: '100%' }} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
