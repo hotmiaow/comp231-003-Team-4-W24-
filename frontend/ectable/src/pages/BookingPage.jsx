@@ -235,7 +235,7 @@ const BookingPage = () => {
         <Typography variant="h6">Select Menu Items</Typography>
         {menuItems.map((item) => (
           <FormControlLabel
-            key={item._id}
+            key={item.name}
             control={
               <Checkbox
                 onChange={handleMenuChange}
