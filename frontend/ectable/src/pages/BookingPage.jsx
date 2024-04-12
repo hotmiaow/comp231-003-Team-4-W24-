@@ -164,14 +164,14 @@ const BookingPage = () => {
 
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
-    const selectedItemId = menuItems.find((item) => item.name === name)?._id;
+    // const selectedItemId = menuItems.find((item) => item.name === name)?._id;
 
     setBookingDetails((prevBookingDetails) => ({
       ...prevBookingDetails,
       menuSelection: checked
-        ? [...prevBookingDetails.menuSelection, selectedItemId]
+        ? [...prevBookingDetails.menuSelection, name]
         : prevBookingDetails.menuSelection.filter(
-            (id) => id !== selectedItemId
+            (itemName) => itemName !== name
           ),
     }));
   };
