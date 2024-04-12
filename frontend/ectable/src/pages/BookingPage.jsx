@@ -163,7 +163,7 @@ const BookingPage = () => {
 
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
-    const selectedItemId = menuItems.find((item) => item.name === name)?._id;
+    const selectedItemId = menuItems.find((item) => item.name === name)?.name;
 
     setBookingDetails((prevBookingDetails) => ({
       ...prevBookingDetails,
