@@ -67,6 +67,7 @@ const BookingPage = () => {
           { restaurantId: restaurantId },
           credentials
         );
+        console.log(menuData)
         setMenuItems(menuData);
       } catch (error) {
         console.error("Error fetching menu items:", error);
@@ -163,7 +164,7 @@ const BookingPage = () => {
 
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
-    const selectedItemId = menuItems.find((item) => item.name === name)?.name;
+    const selectedItemId = menuItems.find((item) => item.name === name)?._id;
 
     setBookingDetails((prevBookingDetails) => ({
       ...prevBookingDetails,
