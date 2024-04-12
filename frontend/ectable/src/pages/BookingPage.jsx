@@ -165,6 +165,8 @@ const BookingPage = () => {
   const handleMenuChange = (event) => {
     const { name, checked } = event.target;
     // const selectedItemId = menuItems.find((item) => item.name === name)?._id;
+    console.log(name);
+    console.log(checked);
 
     setBookingDetails((prevBookingDetails) => ({
       ...prevBookingDetails,
@@ -238,7 +240,7 @@ const BookingPage = () => {
               <Checkbox
                 onChange={handleMenuChange}
                 name={item.name}
-                checked={bookingDetails.menuSelection.includes(item._id)}
+                checked={bookingDetails.menuSelection.includes(item.name)}
               />
             }
             label={`${item.name} - $${item.price}`}
