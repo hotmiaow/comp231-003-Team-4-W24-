@@ -90,6 +90,9 @@ const BookingPage = () => {
     const credentials = {
       t: Cookies.get("accessToken"),
     };
+
+    console.log(menuItems);
+    console.log(`menuSelection : ${bookingDetails.menuSelection}`)
     const restaurantData = await read({ _id: restaurantId }, credentials);
     
     const Reservation = {
