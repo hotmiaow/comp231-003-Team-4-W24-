@@ -67,8 +67,8 @@ const BookingPage = () => {
           { restaurantId: restaurantId },
           credentials
         );
-        console.log(menuData)
         setMenuItems(menuData);
+
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
@@ -238,7 +238,7 @@ const BookingPage = () => {
               <Checkbox
                 onChange={handleMenuChange}
                 name={item.name}
-                checked={bookingDetails.menuSelection.includes(item.name)}
+                checked={bookingDetails.menuSelection.includes(item._id)}
               />
             }
             label={`${item.name} - $${item.price}`}
