@@ -1,0 +1,161 @@
+###get all restaurant
+GET https://ectable.onrender.com/restaurants
+###
+
+### register restaurant
+Post https://ectable.onrender.com/Restaurants/register
+
+content-type: application/json
+
+{
+  "name": "starbucks2",
+  "location": "Scarborough2",
+  "photo": "restImg3.jpg",
+  "rating": "4",
+  "cuisine": "Coffee shop",
+  "price": "$",
+  "description": "offering fresh-roasted coffee beans, tea and spices from around the wo…",
+  "closing": 20,
+  "opening": 12,
+  "phone": 2424242424,
+  "email" :"test@gmail.com"
+}
+
+### get restaurant by id
+Get https://ectable.onrender.com/Restaurants/65cbdda1e140698bfe3702a1
+###
+
+### get all reservation by adminId
+Get https://ectable.onrender.com/Reservation/Admin/65fe5880159eaafa26378e88
+###
+
+
+### update restaurant information
+POST https://ectable.onrender.com/Restaurants/:id/update
+###
+
+### Delete restaurant
+DELETE https://ectable.onrender.com/Restaurants/:id/delete
+###
+
+### Get Diner
+GET  https://ectable.onrender.com/Diner
+
+###
+
+### Get Diner by ID
+GET  https://ectable.onrender.com/Diner/65d38fc4eb637c510ec07e75
+###
+
+### Get User by ID2
+GET  https://ectable.onrender.com/User/65eb6079b82acdbc4694972f
+###
+
+
+### create user
+Post https://ectable.onrender.com/User/register
+
+content-type: application/json
+
+{
+  "email": "ro7@gmail.com",
+  "password": "password",
+  "name": null,
+  "phone": null,
+  "type": "Readonly"
+}
+
+### Diner Login
+Post https://ectable.onrender.com/diner/login
+content-type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "password"
+}
+
+### User Login
+Post https://ectable.onrender.com/User/login
+content-type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "password"
+}
+
+
+
+### register restaurant
+Post https://ectable.onrender.com/Reservation/register
+content-type: application/json
+
+{
+  "id": "65cbdcf6e140698bfe3702a0",
+  "Date": "2023-12-25",
+  "Time": "12:00",
+  "People": "5",
+  "Menu1": "Steak",
+  "Menu2": "Steak",
+  "Menu3": "",
+  "Menu4": ""
+}
+
+
+### register restaurant2
+Post https://ectable.onrender.com/Reservation/register
+content-type: application/json
+
+{
+    "id": "65cbdcf6e140698bfe3702a0",
+  "Date": "2023-12-25",
+  "Time": "12:00",
+  "People": "5",
+  "MenuSelection": "Salmon"
+}
+
+
+### find reservatrion for user
+get https://ectable.onrender.com/Reservation/find
+content-type: application/json
+
+{
+  "id": "65cbdda1e140698bfe3702a1",
+  "userId": "65eb6079b82acdbc4694972f"
+}
+
+### find all reservatrion
+get https://ectable.onrender.com/Reservation
+
+
+### find reservatrion by user ID
+get https://ectable.onrender.com/Reservation/65eb6079b82acdbc4694972f
+
+
+### find Menu by Restaurant ID
+get https://ectable.onrender.com/Menu/Restaurant/65cbdcf6e140698bfe3702a0
+
+
+### find Menu by Restaurant ID 2
+get https://ectable.onrender.com/Menu/Restaurant/65e290743fb93770c0e2cfe9
+
+### search restaurant id by chefid
+post https://ectable.onrender.com/restaurants/chef
+content-type: application/json
+
+{
+  "chefId": "660b01d6d3fa15fa75bf44b7"
+}
+
+###
+post https://ectable.onrender.com/Restaurants/65cbdcf6e140698bfe3702a0/availability
+content-type: application/json
+
+{
+  "restaurantId": "65cbdcf6e140698bfe3702a0",
+  "date": "2023-04-03",
+  "time":"12:00",
+  "availability": "60"
+}
+
+###
+get  https://ectable.onrender.com/User/Email/65eb6079b82acdbc4694972f
